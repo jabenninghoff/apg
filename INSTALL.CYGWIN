@@ -1,0 +1,43 @@
+Installation of APG toolkit for CYGWIN
+
+Generaly there are 2 types of installation:
+(1) standalone
+(2) client-server
+but only standalone installation implemented for CYGWIN yet.
+
+The instruction below IS FOR STANDALONE INSTALLATION ONLY
+
+The simplest way to install this package is:
+1. untar the distribution and cd to the top:
+
+    % gzip -d -c apg-1.X.XX.tar.gz | tar xf -
+    % cd apg-1.X.XX
+
+If you are reading this file, you probably have already done this!
+
+2. Edit the Makefile
+
+3. make the software:
+
+   For standalone:
+
+      % make cygwin
+
+4. install the binaries and man pages.
+There are some problems with install for CYGWIN.
+Sorry... But you have to do it manualy
+
+      % make install-cygwin
+
+5. You can remove the program binaries and object files from the
+source code directory by typing
+
+     % make clean
+
+NOTE: You can use APG without CYGWIN, you need only cygwin*.dll.
+Copy APG.EXE to the directory you want and copy CYGWIN*.DLL
+in the same directory. Now you can run APG.EXE in the MS-DOS Prompt
+or just cliking on it.
+
+Adel I. Mirzazhanov
+a-del@iname.com

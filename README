@@ -1,0 +1,28 @@
+APG v1.2.12 was tested and found working on:
+
+   i386 FreeBSD 4.0-RELEASE
+   i386 Linux-Mandrake 6.0
+   i386 Linux-Redhat 7.0
+   i386 Linux-Mandrake 7.2 (reported by Andrew J. Caird <acaird@advance-inc.com>)
+   Intel Solaris 8 gcc-2.95.2
+   SPARC Solaris 8 gcc-2.95.2
+   Intel Windows 2000+CYGWIN v1.1.4
+   HP-UX 10.20 HP ANSI C Compilier (reported by Alexander J Pierce <apierce@boi.hp.com>)
+   HP-UX 11.00 HP ANSI C Compilier (reported by Alexander J Pierce <apierce@boi.hp.com>)
+   HP-UX 11.00 gcc-2.95.2 (reported by Andrew J. Caird <acaird@advance-inc.com>)
+   IRIX 6.5.8 gcc-2.95.2 (reported by Andrew J. Caird <acaird@advance-inc.com>)
+   AIX 4.3.3+native cc (reported by Philip Le Riche <pleriche@uk03.bull.co.uk>) 
+   AIX 4.3.3+gcc (reported by Philip Le Riche <pleriche@uk03.bull.co.uk>) 
+
+Any compatibility reports are welcom 
+
+  * For installation instructions see INSTALL
+  * For usage instructions see manpages
+  * For copying information see COPYING
+
+See also APG Homepage at: http://www.adel.nursat.kz/apg/
+
+ANY PATCHES OR SUGGESTIONS ARE WELCOME
+
+Adel I. Mirzazhanov
+E-mail: a-del@iname.com

@@ -1,0 +1,67 @@
+apg-1.2.12
+    Added support for AIX, and some compatibility reports
+
+apg-1.2.11
+    Changed default owner of apg and apgd (now it is root).
+    Some cosmetic changes.
+
+apg-1.2.1
+    Changed -R option. Changed documentation.
+
+apg-1.2.1b
+    Changed impementation of -y option. Now you can disable it
+    before compilation.
+    Added option -M for new style password modes specification.
+    (see apg(1) apgd(8)).
+    Added support for IRIX
+    (Thanks to Andrew J. Caird <acaird@advance-inc.com>)
+
+apg-1.2.1a2
+    Added option -y (see apg(1)).
+    (Thanks to Andrew J. Caird <acaird@advance-inc.com>)
+    Some minior fixes for APG for Solaris.
+
+apg-1.2.1alpha
+    Added option -R (see apg(1) and apgd(8)).
+
+apg-1.2.0
+    Changed random character password generation algorithm.
+    Changed user random seed generation procedures.
+
+apg-1.1.61b
+    Fixed directory permissions (thanks to Adrian Ho <lexfiend@usa.net>).
+    Fixed random segfault when run with the -s argument
+    (thanks to Peter Pentchev <roam@orbitel.bg>)
+
+apg-1.1.6b
+    Fixed random number generation error.
+    (Thanks to Rainer Wichmann <st8h304@hs.uni-hamburg.de>)
+    Now RNG uses local time with precision of microseconds
+    as initial seed.
+    (Thanks to Rainer Wichmann <st8h304@hs.uni-hamburg.de>)
+    Fixed error that was the reason of random APG crashes.
+    Added support for /dev/random for seed generation.
+
+apg-1.1.5
+    Fixed some compiler warnings
+    Fixed pronounceable password generation error with modes -C -N. But
+    there is another bug ;-( Sorry...
+    It is no more an error if min_pass_len > max_pass_len.
+    Changed installation procedure
+    Added option -d (see apg(1)).
+	    
+apg-1.1.4
+    Modified pronounceable password generation algorithm.
+    Now support -N and -C options, but still pronounceable ;-)
+	    
+apg-1.0.4
+    Added option -c (see apg(1)).Changed apg.c, apg.1 manpage.
+
+apg-1.0.3
+    Fixed somecode style errors. Changed INSTALL, apgd.8 manpage.
+
+apg-1.0.2
+    Improved event logging of apgd. Changed INSTALL.
+
+apg-1.0.1
+    Fixed password length error
