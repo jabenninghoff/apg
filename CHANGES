@@ -1,3 +1,9 @@
+apg-2.2.2
+    Fixed permissions for source distribution.
+
+apg-2.2.1
+    Changed manpages of apg and apgd.
+
 apg-2.2.0
     Added polish translation for APG PHP frontend.
     Added option -p (see apg(1) apgd(8)).

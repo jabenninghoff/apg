@@ -2,7 +2,7 @@
 .\" Licensed under BSD-like License.
 .\" Created by Adel I. Mirzazhanov
 .\"
-.TH APGD 8 "2003 Jun 19" "Automated Password Generator" "User Manual"
+.TH APGD 8 "2003 Aug 4" "Automated Password Generator" "User Manual"
 .SH NAME
 apgd
 \- server that generates several random passwords
@@ -88,10 +88,7 @@ name of Bloom filter file. In that dictionary you may place words
 common words, etc. You even can use one of the dictionaries that come with
 .I dictionary password crackers.
 Bloom filter file should be created with \fBapgbfm\fP(1) utility included
-in apg distribution. These checks are case sensitive. For example, if you
-want to reject word 'root', you should insert in \fIdictfile\fP words: root,
-Root, RoOt, ... , ROOT. It is not the easiest way to check password quality,
-but it is the most powerful way. In future releases I plan to implement some
+in apg distribution. In future releases I plan to implement some
 other techniques to check passwords just to make life easier.
 .PP
 .B apgd
@@ -117,6 +114,36 @@ for internal debug information
 See the \fBsyslogd\fP(8) and \fBsyslog.conf\fP(5) man pages for information on how to configure your syslog daemon.
 .sp
 .SH "OPTIONS"
+.SS "Password generation modes options"
+.TP
+.B -a algorithm
+use 
+.B algorithm
+for password generation.
+.RS
+.B 0
+- (default) pronounceable password generation
+.br
+.B 1
+- random character password generation
+.RE
+.TP
+.B -n num_of_pass
+generate 
+.B num_of_pass
+number of passwords. Default is 6.
+.TP
+.B -m min_pass_len
+generate password with minimum length 
+.B min_pass_len.
+If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
+Default minimum password length is 8.
+.TP
+.B -x max_pass_len
+generate password with maximum length 
+.B max_pass_len
+If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
+Default maximum password length is 10.
 .TP
 .B -M mode
 Use symbolsets specified with \fBmode\fP for password generation.
@@ -167,18 +194,6 @@ Usage of L, M, N, C will slow down password generation process.
 \fB-M sncl\fP or \fB-M SNCL\fP or \fB-M Cn\fP
 .RE
 .TP
-.B -a algorithm
-use 
-.B algorithm
-for password generation.
-.RS
-.B 0
-- (default) pronounceable password generation
-.br
-.B 1
-- random character password generation
-.RE
-.TP
 .B -E char_string
 exclude characters in \fBchar_string\fP from password generation process (in pronounceable
 password generation mode you can not exclude small letters). To include special symbols
@@ -208,6 +223,7 @@ that will look like this
 \fB8C8DF37CD792D36D056BBD5002\fP
 .br
 .RE
+.SS "Password quality control options"
 .TP
 .B -r \fIdictfile\fP
 check generated passwords for their appearance in 
@@ -225,23 +241,7 @@ be found in the \fIfilter_file\fP then generated password would be rejected
 and apg(1) will generate another one.
 \fBmin_substr_len\fP is specifies minimum substring length to check.
 This option is active only if \fB-b\fP option is defined.
-.TP
-.B -n num_of_pass
-generate 
-.B num_of_pass
-number of passwords. Default is 6.
-.TP
-.B -m min_pass_len
-generate password with minimum length 
-.B min_pass_len.
-If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default minimum password length is 8.
-.TP
-.B -x max_pass_len
-generate password with maximum length 
-.B max_pass_len
-If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default maximum password length is 10.
+.SS "Password output options"
 .TP
 .B -l
 spell genetated passwords. Useful when you want to read generated password by telephone.

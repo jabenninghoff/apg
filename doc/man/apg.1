@@ -2,7 +2,7 @@
 .\" Licensed under BSD-like License.
 .\" Created by Adel I. Mirzazhanov
 .\"
-.TH APG 1 "2003 Jun 19" "Automated Password Generator" "User Manual"
+.TH APG 1 "2003 Aug 04" "Automated Password Generator" "User Manual"
 .SH NAME
 apg
 \- generates several random passwords
@@ -12,7 +12,8 @@ apg
 [\fB-a algorithm\fP] [\fB-M mode\fP] [\fB-E char_string\fP]
 [\fB-n num_of_pass\fP] [\fB-m min_pass_len\fP] [\fB-x max_pass_len\fP]
 [\fB-r\fP \fIdictfile\fP] [\fB-b\fP \fIfilter_file\fP] [\fB-p min_substr_len\fP]
-[\fB-s\fP] [\fB-c cl_seed\fP] [\fB-d\fP] [\fB-y\fP] [\fB-l\fP] [\fB-t\fP] [\fB-q\fP] [\fB-h\fP] [\fB-v\fP]
+[\fB-s\fP] [\fB-c cl_seed\fP] [\fB-d\fP] [\fB-y\fP] [\fB-l\fP] [\fB-t\fP]
+[\fB-q\fP] [\fB-h\fP] [\fB-v\fP]
 .PP
 .SH DESCRIPTION
 .B apg
@@ -73,13 +74,40 @@ name of Bloom filter file. In that dictionary you may place words
 common words, etc. You even can use one of the dictionaries that come with
 .I dictionary password crackers.
 Bloom filter file should be created with \fBapgbfm\fP(1) utility included
-in apg distribution. These checks are case sensitive. For example, if you want
-to reject word 'root', you should insert in \fIdictfile\fP words: root, Root,
-RoOt, ... , ROOT. It is not the easiest way to check password quality, but
-it is the most powerful way. In future releases I plan to implement some other
+in apg distribution. In future releases I plan to implement some other
 techniques to check passwords (like pattern check) just to make life easier.
 .sp
 .SH "OPTIONS"
+.SS "Password generation modes options"
+.TP
+.B -a algorithm
+use 
+.B algorithm
+for password generation.
+.RS
+.B 0
+- (default) pronounceable password generation
+.br
+.B 1
+- random character password generation
+.RE
+.TP
+.B -n num_of_pass
+generate 
+.B num_of_pass
+number of passwords. Default is 6.
+.TP
+.B -m min_pass_len
+generate password with minimum length 
+.B min_pass_len.
+If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
+Default minimum password length is 8.
+.TP
+.B -x max_pass_len
+generate password with maximum length 
+.B max_pass_len.
+If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
+Default maximum password length is 10.
 .TP
 .B -M mode
 Use symbolsets specified with \fBmode\fP for password generation.
@@ -130,18 +158,6 @@ Usage of L, M, N, C will slow down password generation process.
 \fB-M sncl\fP or \fB-M SNCL\fP or \fB-M Cn\fP
 .RE
 .TP
-.B -a algorithm
-use 
-.B algorithm
-for password generation.
-.RS
-.B 0
-- (default) pronounceable password generation
-.br
-.B 1
-- random character password generation
-.RE
-.TP
 .B -E char_string
 exclude characters in \fBchar_string\fP from password generation process (in pronounceable
 password generation mode you can not exclude small letters). To include special symbols that
@@ -151,7 +167,7 @@ the backslashed versions.
 .PP
 .B Examples:
 .PP
-Command \fBapg -a 1 -M n -n 3 -m 8 -e 23456789\fP will generate a set of passwords that
+Command \fBapg -a 1 -M n -n 3 -m 8 -E 23456789\fP will generate a set of passwords that
 will look like this
 .br
 \fB10100110\fP
@@ -161,7 +177,7 @@ will look like this
 \fB11011101\fP
 .br
 .PP
-Command \fBapg -a 1 -M nc -n 3 -m 26 -e GHIJKLMNOPQRSTUVWXYZ\fP will generate a set of passwords
+Command \fBapg -a 1 -M nc -n 3 -m 26 -E GHIJKLMNOPQRSTUVWXYZ\fP will generate a set of passwords
 that will look like this
 .br
 \fB16A1653CD4DE5E7BD9584A3476\fP
@@ -171,6 +187,7 @@ that will look like this
 \fB8C8DF37CD792D36D056BBD5002\fP
 .br
 .RE
+.SS "Password quality control options"
 .TP
 .B -r \fIdictfile\fP
 check generated passwords for their appearance in 
@@ -188,6 +205,7 @@ be found in the \fIfilter_file\fP then generated password would be rejected
 and apg(1) will generate another one.
 \fBmin_substr_len\fP specifies minimum substring length to check.
 This option is active only if \fB-b\fP option is defined.
+.SS "Pseudo random number generator options"
 .TP
 .B -s
 ask user for random sequence for password generation
@@ -197,27 +215,12 @@ use
 .B cl_seed
 as a random seed for password generation. I use it when i have to generate
 passwords in a shell script.
+.SS "Password output options"
+.br
 .TP
 .B -d
 do NOT use any delimiters between generated passwords. I use it when i have to generate
 passwords in a shell script.
-.TP
-.B -n num_of_pass
-generate 
-.B num_of_pass
-number of passwords. Default is 6.
-.TP
-.B -m min_pass_len
-generate password with minimum length 
-.B min_pass_len.
-If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default minimum password length is 8.
-.TP
-.B -x max_pass_len
-generate password with maximum length 
-.B max_pass_len.
-If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default maximum password length is 10.
 .TP
 .B -y
 print generated passwords and crypted passwords (see man \fBcrypt\fP(3))
