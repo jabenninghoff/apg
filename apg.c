@@ -39,9 +39,9 @@
 #include <time.h>
 
 #ifndef APG_USE_SHA
-#define APG_VERSION "2.2.0 (PRNG: X9.17/CAST)"
+#define APG_VERSION "2.2.3 (PRNG: X9.17/CAST)"
 #else /* APG_USE_SHA */
-#define APG_VERSION "2.2.0 (PRNG: X9.17/SHA-1)"
+#define APG_VERSION "2.2.3 (PRNG: X9.17/SHA-1)"
 #endif /* APG_USE_SHA */
 
 #ifdef __NetBSD__
