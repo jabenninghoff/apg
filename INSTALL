@@ -1,0 +1,91 @@
+Installation
+
+There are 2 types of installation: (1) stand-alone, (2) client-server
+(See README for details). You can use each type separetly or you can
+use them together.
+
+The simplest way to install this package is:
+1. untar the distribution and cd to the top:
+
+    % gzip -d -c apg-1.X.XX.tar.gz | tar xf -
+    % cd apg-1.X.XX
+
+If you are reading this file, you probably have already done this!
+
+2. Edit the Makefile
+
+3. make the software:
+
+   For stand-alone:
+
+      % make standalone
+
+   For client-server:
+
+      % make cliserv
+
+   For both:
+
+     % make all
+
+4. install the binaries and man pages. You may need to be superuser
+to do this (depending on where you are installing things):
+
+     % su
+     # make install
+
+5. You can remove the program binaries and object files from the
+source code directory by typing
+
+     % make clean
+
+NOTE: THE REST IS FOR CLIENT-SERVER INSTALLATION ONLY !!!
+
+6. Modify your /etc/inetd.conf file to contain the line below.
+You may have to modify it to support your version of the file.
+
+     pwdgen stream tcp nowait nobody /usr/local/sbin/apgd apgd [options]
+
+or
+     pwdgen stream tcp nowait nobody /usr/sbin/tcpd /usr/local/sbin/apgd [options]
+
+if you use tcp_wrapers. (for options see apgd(8) manpage)
+
+For all OS versions you must modify, your /etc/services file needs
+to include the following line:
+
+     pwdgen     129/tcp        # PWDGEN service
+
+7. Restart inetd with a
+
+    # kill -HUP inetdpid
+
+8. Configure your syslogd daemon to handle events `daemon.info' and
+`daemon.debug' see syslogd(8) and syslog.conf(5)
+
+9. Check that apgd is working
+
+    % telnet your.host.name 129
+
+or
+
+    % telnet your.host.name pwdgen
+
+10. Customize your apgcli.pl - APG client
+Edit apgcli.pl file that can be found in src/perl directory of
+source distribution tree
+
+----------------------------------> src/perl/apgcli.pl
+#!/usr/bin/perl -w                 # Put here the real location of perl
+$host = "localhost";               # Put here the name of your APG server
+use IO::Socket;
+$remote = IO::Socket::INET->new(
+    Proto => "tcp",
+    PeerAddr => $host,
+    PeerPort => "pwdgen(129)",
+    )
+    or die "cannot connect to pwdgen port at $host";
+while ( <$remote> ) { print }
+----------------------------------> src/perl/apgcli.pl
+
+END
