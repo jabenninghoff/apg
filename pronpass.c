@@ -5,7 +5,7 @@
 */
 
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -89,7 +89,7 @@ static struct unit  rules[] =
 
 static int  digram[][RULE_SIZE] =
 {
-     /* aa */ ILLEGAL_PAIR,
+    {/* aa */ ILLEGAL_PAIR,
      /* ab */ ANY_COMBINATION,
      /* ac */ ANY_COMBINATION,
      /* ad */ ANY_COMBINATION,
@@ -122,8 +122,8 @@ static int  digram[][RULE_SIZE] =
      /* ath */ ANY_COMBINATION,
      /* awh */ ILLEGAL_PAIR,
      /* aqu */ BREAK | NOT_END,
-     /* ack */ ANY_COMBINATION,
-     /* ba */ ANY_COMBINATION,
+     /* ack */ ANY_COMBINATION},
+    {/* ba */ ANY_COMBINATION,
      /* bb */ NOT_BEGIN | BREAK | NOT_END,
      /* bc */ NOT_BEGIN | BREAK | NOT_END,
      /* bd */ NOT_BEGIN | BREAK | NOT_END,
@@ -156,8 +156,8 @@ static int  digram[][RULE_SIZE] =
      /* bth */ NOT_BEGIN | BREAK | NOT_END,
      /* bwh */ ILLEGAL_PAIR,
      /* bqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* bck */ ILLEGAL_PAIR,
-     /* ca */ ANY_COMBINATION,
+     /* bck */ ILLEGAL_PAIR },
+    {/* ca */ ANY_COMBINATION,
      /* cb */ NOT_BEGIN | BREAK | NOT_END,
      /* cc */ NOT_BEGIN | BREAK | NOT_END,
      /* cd */ NOT_BEGIN | BREAK | NOT_END,
@@ -190,8 +190,8 @@ static int  digram[][RULE_SIZE] =
      /* cth */ NOT_BEGIN | BREAK | NOT_END,
      /* cwh */ ILLEGAL_PAIR,
      /* cqu */ NOT_BEGIN | SUFFIX | NOT_END,
-     /* cck */ ILLEGAL_PAIR,
-     /* da */ ANY_COMBINATION,
+     /* cck */ ILLEGAL_PAIR},
+    {/* da */ ANY_COMBINATION,
      /* db */ NOT_BEGIN | BREAK | NOT_END,
      /* dc */ NOT_BEGIN | BREAK | NOT_END,
      /* dd */ NOT_BEGIN,
@@ -224,8 +224,8 @@ static int  digram[][RULE_SIZE] =
      /* dth */ NOT_BEGIN | PREFIX,
      /* dwh */ ILLEGAL_PAIR,
      /* dqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* dck */ ILLEGAL_PAIR,
-     /* ea */ ANY_COMBINATION,
+     /* dck */ ILLEGAL_PAIR },
+    {/* ea */ ANY_COMBINATION,
      /* eb */ ANY_COMBINATION,
      /* ec */ ANY_COMBINATION,
      /* ed */ ANY_COMBINATION,
@@ -258,8 +258,8 @@ static int  digram[][RULE_SIZE] =
      /* eth */ ANY_COMBINATION,
      /* ewh */ ILLEGAL_PAIR,
      /* equ */ BREAK | NOT_END,
-     /* eck */ ANY_COMBINATION,
-     /* fa */ ANY_COMBINATION,
+     /* eck */ ANY_COMBINATION },
+    {/* fa */ ANY_COMBINATION,
      /* fb */ NOT_BEGIN | BREAK | NOT_END,
      /* fc */ NOT_BEGIN | BREAK | NOT_END,
      /* fd */ NOT_BEGIN | BREAK | NOT_END,
@@ -292,8 +292,8 @@ static int  digram[][RULE_SIZE] =
      /* fth */ NOT_BEGIN | BREAK | NOT_END,
      /* fwh */ ILLEGAL_PAIR,
      /* fqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* fck */ ILLEGAL_PAIR,
-     /* ga */ ANY_COMBINATION,
+     /* fck */ ILLEGAL_PAIR },
+    {/* ga */ ANY_COMBINATION,
      /* gb */ NOT_BEGIN | BREAK | NOT_END,
      /* gc */ NOT_BEGIN | BREAK | NOT_END,
      /* gd */ NOT_BEGIN | BREAK | NOT_END,
@@ -326,8 +326,8 @@ static int  digram[][RULE_SIZE] =
      /* gth */ NOT_BEGIN,
      /* gwh */ ILLEGAL_PAIR,
      /* gqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* gck */ ILLEGAL_PAIR,
-     /* ha */ ANY_COMBINATION,
+     /* gck */ ILLEGAL_PAIR },
+    {/* ha */ ANY_COMBINATION,
      /* hb */ NOT_BEGIN | BREAK | NOT_END,
      /* hc */ NOT_BEGIN | BREAK | NOT_END,
      /* hd */ NOT_BEGIN | BREAK | NOT_END,
@@ -360,8 +360,8 @@ static int  digram[][RULE_SIZE] =
      /* hth */ NOT_BEGIN | BREAK | NOT_END,
      /* hwh */ ILLEGAL_PAIR,
      /* hqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* hck */ ILLEGAL_PAIR,
-     /* ia */ ANY_COMBINATION,
+     /* hck */ ILLEGAL_PAIR },
+    {/* ia */ ANY_COMBINATION,
      /* ib */ ANY_COMBINATION,
      /* ic */ ANY_COMBINATION,
      /* id */ ANY_COMBINATION,
@@ -394,8 +394,8 @@ static int  digram[][RULE_SIZE] =
      /* ith */ ANY_COMBINATION,
      /* iwh */ ILLEGAL_PAIR,
      /* iqu */ BREAK | NOT_END,
-     /* ick */ ANY_COMBINATION,
-     /* ja */ ANY_COMBINATION,
+     /* ick */ ANY_COMBINATION },
+    {/* ja */ ANY_COMBINATION,
      /* jb */ NOT_BEGIN | BREAK | NOT_END,
      /* jc */ NOT_BEGIN | BREAK | NOT_END,
      /* jd */ NOT_BEGIN | BREAK | NOT_END,
@@ -428,8 +428,8 @@ static int  digram[][RULE_SIZE] =
      /* jth */ NOT_BEGIN | BREAK | NOT_END,
      /* jwh */ ILLEGAL_PAIR,
      /* jqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* jck */ ILLEGAL_PAIR,
-     /* ka */ ANY_COMBINATION,
+     /* jck */ ILLEGAL_PAIR },
+    {/* ka */ ANY_COMBINATION,
      /* kb */ NOT_BEGIN | BREAK | NOT_END,
      /* kc */ NOT_BEGIN | BREAK | NOT_END,
      /* kd */ NOT_BEGIN | BREAK | NOT_END,
@@ -462,8 +462,8 @@ static int  digram[][RULE_SIZE] =
      /* kth */ NOT_BEGIN | BREAK | NOT_END,
      /* kwh */ ILLEGAL_PAIR,
      /* kqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* kck */ ILLEGAL_PAIR,
-     /* la */ ANY_COMBINATION,
+     /* kck */ ILLEGAL_PAIR },
+    {/* la */ ANY_COMBINATION,
      /* lb */ NOT_BEGIN | PREFIX,
      /* lc */ NOT_BEGIN | BREAK | NOT_END,
      /* ld */ NOT_BEGIN | PREFIX,
@@ -496,8 +496,8 @@ static int  digram[][RULE_SIZE] =
      /* lth */ NOT_BEGIN | PREFIX,
      /* lwh */ ILLEGAL_PAIR,
      /* lqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* lck */ ILLEGAL_PAIR,
-     /* ma */ ANY_COMBINATION,
+     /* lck */ ILLEGAL_PAIR },
+    {/* ma */ ANY_COMBINATION,
      /* mb */ NOT_BEGIN | BREAK | NOT_END,
      /* mc */ NOT_BEGIN | BREAK | NOT_END,
      /* md */ NOT_BEGIN | BREAK | NOT_END,
@@ -530,8 +530,8 @@ static int  digram[][RULE_SIZE] =
      /* mth */ NOT_BEGIN,
      /* mwh */ ILLEGAL_PAIR,
      /* mqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* mck */ ILLEGAL_PAIR,
-     /* na */ ANY_COMBINATION,
+     /* mck */ ILLEGAL_PAIR },
+    {/* na */ ANY_COMBINATION,
      /* nb */ NOT_BEGIN | BREAK | NOT_END,
      /* nc */ NOT_BEGIN | BREAK | NOT_END,
      /* nd */ NOT_BEGIN,
@@ -564,8 +564,8 @@ static int  digram[][RULE_SIZE] =
      /* nth */ NOT_BEGIN,
      /* nwh */ ILLEGAL_PAIR,
      /* nqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* nck */ NOT_BEGIN | PREFIX,
-     /* oa */ ANY_COMBINATION,
+     /* nck */ NOT_BEGIN | PREFIX },
+    {/* oa */ ANY_COMBINATION,
      /* ob */ ANY_COMBINATION,
      /* oc */ ANY_COMBINATION,
      /* od */ ANY_COMBINATION,
@@ -598,8 +598,8 @@ static int  digram[][RULE_SIZE] =
      /* oth */ ANY_COMBINATION,
      /* owh */ ILLEGAL_PAIR,
      /* oqu */ BREAK | NOT_END,
-     /* ock */ ANY_COMBINATION,
-     /* pa */ ANY_COMBINATION,
+     /* ock */ ANY_COMBINATION },
+    {/* pa */ ANY_COMBINATION,
      /* pb */ NOT_BEGIN | BREAK | NOT_END,
      /* pc */ NOT_BEGIN | BREAK | NOT_END,
      /* pd */ NOT_BEGIN | BREAK | NOT_END,
@@ -632,8 +632,8 @@ static int  digram[][RULE_SIZE] =
      /* pth */ NOT_BEGIN | BREAK | NOT_END,
      /* pwh */ ILLEGAL_PAIR,
      /* pqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* pck */ ILLEGAL_PAIR,
-     /* ra */ ANY_COMBINATION,
+     /* pck */ ILLEGAL_PAIR },
+    {/* ra */ ANY_COMBINATION,
      /* rb */ NOT_BEGIN | PREFIX,
      /* rc */ NOT_BEGIN | PREFIX,
      /* rd */ NOT_BEGIN | PREFIX,
@@ -666,8 +666,8 @@ static int  digram[][RULE_SIZE] =
      /* rth */ NOT_BEGIN | PREFIX,
      /* rwh */ ILLEGAL_PAIR,
      /* rqu */ NOT_BEGIN | PREFIX | NOT_END,
-     /* rck */ NOT_BEGIN | PREFIX,
-     /* sa */ ANY_COMBINATION,
+     /* rck */ NOT_BEGIN | PREFIX },
+    {/* sa */ ANY_COMBINATION,
      /* sb */ NOT_BEGIN | BREAK | NOT_END,
      /* sc */ NOT_END,
      /* sd */ NOT_BEGIN | BREAK | NOT_END,
@@ -700,8 +700,8 @@ static int  digram[][RULE_SIZE] =
      /* sth */ NOT_BEGIN | BREAK | NOT_END,
      /* swh */ ILLEGAL_PAIR,
      /* squ */ SUFFIX | NOT_END,
-     /* sck */ NOT_BEGIN,
-     /* ta */ ANY_COMBINATION,
+     /* sck */ NOT_BEGIN },
+    {/* ta */ ANY_COMBINATION,
      /* tb */ NOT_BEGIN | BREAK | NOT_END,
      /* tc */ NOT_BEGIN | BREAK | NOT_END,
      /* td */ NOT_BEGIN | BREAK | NOT_END,
@@ -734,8 +734,8 @@ static int  digram[][RULE_SIZE] =
      /* tth */ NOT_BEGIN | BREAK | NOT_END,
      /* twh */ ILLEGAL_PAIR,
      /* tqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* tck */ ILLEGAL_PAIR,
-     /* ua */ NOT_BEGIN | BREAK | NOT_END,
+     /* tck */ ILLEGAL_PAIR },
+    {/* ua */ NOT_BEGIN | BREAK | NOT_END,
      /* ub */ ANY_COMBINATION,
      /* uc */ ANY_COMBINATION,
      /* ud */ ANY_COMBINATION,
@@ -768,8 +768,8 @@ static int  digram[][RULE_SIZE] =
      /* uth */ ANY_COMBINATION,
      /* uwh */ ILLEGAL_PAIR,
      /* uqu */ BREAK | NOT_END,
-     /* uck */ ANY_COMBINATION,
-     /* va */ ANY_COMBINATION,
+     /* uck */ ANY_COMBINATION },
+    {/* va */ ANY_COMBINATION,
      /* vb */ NOT_BEGIN | BREAK | NOT_END,
      /* vc */ NOT_BEGIN | BREAK | NOT_END,
      /* vd */ NOT_BEGIN | BREAK | NOT_END,
@@ -802,8 +802,8 @@ static int  digram[][RULE_SIZE] =
      /* vth */ NOT_BEGIN | BREAK | NOT_END,
      /* vwh */ ILLEGAL_PAIR,
      /* vqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* vck */ ILLEGAL_PAIR,
-     /* wa */ ANY_COMBINATION,
+     /* vck */ ILLEGAL_PAIR },
+    {/* wa */ ANY_COMBINATION,
      /* wb */ NOT_BEGIN | PREFIX,
      /* wc */ NOT_BEGIN | BREAK | NOT_END,
      /* wd */ NOT_BEGIN | PREFIX | END,
@@ -836,8 +836,8 @@ static int  digram[][RULE_SIZE] =
      /* wth */ NOT_BEGIN,
      /* wwh */ ILLEGAL_PAIR,
      /* wqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* wck */ NOT_BEGIN,
-     /* xa */ NOT_BEGIN,
+     /* wck */ NOT_BEGIN },
+    {/* xa */ NOT_BEGIN,
      /* xb */ NOT_BEGIN | BREAK | NOT_END,
      /* xc */ NOT_BEGIN | BREAK | NOT_END,
      /* xd */ NOT_BEGIN | BREAK | NOT_END,
@@ -870,8 +870,8 @@ static int  digram[][RULE_SIZE] =
      /* xth */ NOT_BEGIN | BREAK | NOT_END,
      /* xwh */ ILLEGAL_PAIR,
      /* xqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* xck */ ILLEGAL_PAIR,
-     /* ya */ ANY_COMBINATION,
+     /* xck */ ILLEGAL_PAIR },
+    {/* ya */ ANY_COMBINATION,
      /* yb */ NOT_BEGIN,
      /* yc */ NOT_BEGIN | NOT_END,
      /* yd */ NOT_BEGIN,
@@ -904,8 +904,8 @@ static int  digram[][RULE_SIZE] =
      /* yth */ NOT_BEGIN | BREAK | NOT_END,
      /* ywh */ ILLEGAL_PAIR,
      /* yqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* yck */ ILLEGAL_PAIR,
-     /* za */ ANY_COMBINATION,
+     /* yck */ ILLEGAL_PAIR },
+    {/* za */ ANY_COMBINATION,
      /* zb */ NOT_BEGIN | BREAK | NOT_END,
      /* zc */ NOT_BEGIN | BREAK | NOT_END,
      /* zd */ NOT_BEGIN | BREAK | NOT_END,
@@ -938,8 +938,8 @@ static int  digram[][RULE_SIZE] =
      /* zth */ NOT_BEGIN | BREAK | NOT_END,
      /* zwh */ ILLEGAL_PAIR,
      /* zqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* zck */ ILLEGAL_PAIR,
-     /* cha */ ANY_COMBINATION,
+     /* zck */ ILLEGAL_PAIR },
+    {/* cha */ ANY_COMBINATION,
      /* chb */ NOT_BEGIN | BREAK | NOT_END,
      /* chc */ NOT_BEGIN | BREAK | NOT_END,
      /* chd */ NOT_BEGIN | BREAK | NOT_END,
@@ -972,8 +972,8 @@ static int  digram[][RULE_SIZE] =
      /* chth */ NOT_BEGIN | BREAK | NOT_END,
      /* chwh */ ILLEGAL_PAIR,
      /* chqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* chck */ ILLEGAL_PAIR,
-     /* gha */ ANY_COMBINATION,
+     /* chck */ ILLEGAL_PAIR },
+    {/* gha */ ANY_COMBINATION,
      /* ghb */ NOT_BEGIN | BREAK | PREFIX | NOT_END,
      /* ghc */ NOT_BEGIN | BREAK | PREFIX | NOT_END,
      /* ghd */ NOT_BEGIN | BREAK | PREFIX | NOT_END,
@@ -1006,8 +1006,8 @@ static int  digram[][RULE_SIZE] =
      /* ghth */ NOT_BEGIN | BREAK | PREFIX | NOT_END,
      /* ghwh */ ILLEGAL_PAIR,
      /* ghqu */ NOT_BEGIN | BREAK | PREFIX | NOT_END,
-     /* ghck */ ILLEGAL_PAIR,
-     /* pha */ ANY_COMBINATION,
+     /* ghck */ ILLEGAL_PAIR },
+    {/* pha */ ANY_COMBINATION,
      /* phb */ NOT_BEGIN | BREAK | NOT_END,
      /* phc */ NOT_BEGIN | BREAK | NOT_END,
      /* phd */ NOT_BEGIN | BREAK | NOT_END,
@@ -1040,8 +1040,8 @@ static int  digram[][RULE_SIZE] =
      /* phth */ NOT_BEGIN | BREAK | NOT_END,
      /* phwh */ ILLEGAL_PAIR,
      /* phqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* phck */ ILLEGAL_PAIR,
-     /* rha */ BEGIN | NOT_END,
+     /* phck */ ILLEGAL_PAIR },
+    {/* rha */ BEGIN | NOT_END,
      /* rhb */ ILLEGAL_PAIR,
      /* rhc */ ILLEGAL_PAIR,
      /* rhd */ ILLEGAL_PAIR,
@@ -1074,8 +1074,8 @@ static int  digram[][RULE_SIZE] =
      /* rhth */ ILLEGAL_PAIR,
      /* rhwh */ ILLEGAL_PAIR,
      /* rhqu */ ILLEGAL_PAIR,
-     /* rhck */ ILLEGAL_PAIR,
-     /* sha */ ANY_COMBINATION,
+     /* rhck */ ILLEGAL_PAIR },
+    {/* sha */ ANY_COMBINATION,
      /* shb */ NOT_BEGIN | BREAK | NOT_END,
      /* shc */ NOT_BEGIN | BREAK | NOT_END,
      /* shd */ NOT_BEGIN | BREAK | NOT_END,
@@ -1108,8 +1108,8 @@ static int  digram[][RULE_SIZE] =
      /* shth */ NOT_BEGIN | BREAK | NOT_END,
      /* shwh */ ILLEGAL_PAIR,
      /* shqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* shck */ ILLEGAL_PAIR,
-     /* tha */ ANY_COMBINATION,
+     /* shck */ ILLEGAL_PAIR },
+    {/* tha */ ANY_COMBINATION,
      /* thb */ NOT_BEGIN | BREAK | NOT_END,
      /* thc */ NOT_BEGIN | BREAK | NOT_END,
      /* thd */ NOT_BEGIN | BREAK | NOT_END,
@@ -1142,8 +1142,8 @@ static int  digram[][RULE_SIZE] =
      /* thth */ ILLEGAL_PAIR,
      /* thwh */ ILLEGAL_PAIR,
      /* thqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* thck */ ILLEGAL_PAIR,
-     /* wha */ BEGIN | NOT_END,
+     /* thck */ ILLEGAL_PAIR },
+    {/* wha */ BEGIN | NOT_END,
      /* whb */ ILLEGAL_PAIR,
      /* whc */ ILLEGAL_PAIR,
      /* whd */ ILLEGAL_PAIR,
@@ -1176,8 +1176,8 @@ static int  digram[][RULE_SIZE] =
      /* whth */ ILLEGAL_PAIR,
      /* whwh */ ILLEGAL_PAIR,
      /* whqu */ ILLEGAL_PAIR,
-     /* whck */ ILLEGAL_PAIR,
-     /* qua */ ANY_COMBINATION,
+     /* whck */ ILLEGAL_PAIR },
+    {/* qua */ ANY_COMBINATION,
      /* qub */ ILLEGAL_PAIR,
      /* quc */ ILLEGAL_PAIR,
      /* qud */ ILLEGAL_PAIR,
@@ -1210,8 +1210,8 @@ static int  digram[][RULE_SIZE] =
      /* quth */ ILLEGAL_PAIR,
      /* quwh */ ILLEGAL_PAIR,
      /* ququ */ ILLEGAL_PAIR,
-     /* quck */ ILLEGAL_PAIR,
-     /* cka */ NOT_BEGIN | BREAK | NOT_END,
+     /* quck */ ILLEGAL_PAIR },
+    {/* cka */ NOT_BEGIN | BREAK | NOT_END,
      /* ckb */ NOT_BEGIN | BREAK | NOT_END,
      /* ckc */ NOT_BEGIN | BREAK | NOT_END,
      /* ckd */ NOT_BEGIN | BREAK | NOT_END,
@@ -1244,7 +1244,7 @@ static int  digram[][RULE_SIZE] =
      /* ckth */ NOT_BEGIN | BREAK | NOT_END,
      /* ckwh */ ILLEGAL_PAIR,
      /* ckqu */ NOT_BEGIN | BREAK | NOT_END,
-     /* ckck */ ILLEGAL_PAIR
+     /* ckck */ ILLEGAL_PAIR}
 };
 
 /*
@@ -1273,7 +1273,8 @@ gen_pron_pass (char *word, char *hyphenated_word, USHORT minlen,
   * Check for minlen>maxlen.  This is an error.
   * and a length of 0.
   */
-    if (minlen > maxlen || minlen > 255 || maxlen > 255)
+    if (minlen > maxlen || minlen > APG_MAX_PASSWORD_LENGTH ||
+        maxlen > APG_MAX_PASSWORD_LENGTH)
       return (-1);
  /* 
   * Check for zero length words.  This is technically not an error,
@@ -1309,6 +1310,7 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
     USHORT word_length;
     USHORT syllable_length;
     char   *new_syllable;
+    char   *syllable_for_hyph;
     USHORT *syllable_units;
     USHORT word_size;
     USHORT word_place;
@@ -1316,6 +1318,7 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
     USHORT syllable_size;
     UINT   tries;
     int ch_flag = FALSE;
+    int dsd = 0;
 
     /*
      * Keep count of retries.
@@ -1345,7 +1348,8 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
      */
     if ( (word_units     = (USHORT *) calloc (sizeof (USHORT), pwlen+1))==NULL ||
          (syllable_units = (USHORT *) calloc (sizeof (USHORT), pwlen+1))==NULL ||
-         (new_syllable   = (char *) calloc (sizeof (USHORT), pwlen+1))  ==NULL)
+         (new_syllable   = (char *) calloc (sizeof (USHORT), pwlen+1))  ==NULL ||
+	 (syllable_for_hyph = (char *) calloc (sizeof(char), 20))==NULL)
 	   return(-1);
 
     /*
@@ -1387,18 +1391,33 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
           ** Modify syllable for numeric or capital symbols required
           ** Should be done after word quality check. 
           */
-          if ( ((pass_mode & S_NB) > 0) && (syllable_length == 1))
+	  dsd = randint(2);
+          if ( ((pass_mode & S_NB) > 0) && (syllable_length == 1) && dsd == 0)
             {
              numerize(new_syllable);
 	     ch_flag = TRUE;
             }
+          if ( ((pass_mode & S_SS) > 0) && (syllable_length == 1) && (dsd == 1))
+            {
+	      specialize(new_syllable);
+	      ch_flag = TRUE;
+	    }
           if ( ( (pass_mode & S_CL) > 0) && (ch_flag != TRUE))
              capitalize(new_syllable);
           ch_flag = FALSE;
           /**/
           (void) strcpy (word, new_syllable);
-          (void) strcpy (hyphenated_word, new_syllable);
-	  bzero ( (void *)new_syllable, (size_t)(pwlen * sizeof(USHORT)+1));
+	  if (syllable_length == 1)
+	     {
+	      symb2name(new_syllable, syllable_for_hyph);
+              (void) strcpy (hyphenated_word, syllable_for_hyph);
+	     }
+	  else
+	     {
+              (void) strcpy (hyphenated_word, new_syllable);
+	     }
+	  (void)memset ( (void *)new_syllable, 0, (size_t)(pwlen * sizeof(USHORT)+1));
+	  (void)memset ( (void *)syllable_for_hyph, 0, 20);
          }
          else
          {
@@ -1406,19 +1425,34 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
           ** Modify syllable for numeric or capital symbols required
           ** Should be done after word quality check.
           */
-          if ( ((pass_mode & S_NB) > 0) && (syllable_length == 1))
+	  dsd = randint(2);
+          if ( ((pass_mode & S_NB) > 0) && (syllable_length == 1) && (dsd == 0))
             {
              numerize(new_syllable);
 	     ch_flag = TRUE;
             }
+          if ( ( (pass_mode & S_SS) > 0) && (syllable_length == 1) && (dsd == 1))
+            {
+	     specialize(new_syllable);
+	     ch_flag = TRUE;
+	    }
           if ( ( (pass_mode & S_CL) > 0) && (ch_flag != TRUE))
              capitalize(new_syllable);
           ch_flag = FALSE;
           /**/
           (void) strcat (word, new_syllable);
           (void) strcat (hyphenated_word, "-");
-          (void) strcat (hyphenated_word, new_syllable);
-	  bzero ( (void *)new_syllable, (size_t)(pwlen * sizeof(USHORT)+1));
+	  if (syllable_length == 1)
+	     {
+	      symb2name(new_syllable, syllable_for_hyph);
+              (void) strcat (hyphenated_word, syllable_for_hyph);
+	     }
+	  else
+	     {
+              (void) strcat (hyphenated_word, new_syllable);
+	     }
+	  (void)memset ( (void *)new_syllable, 0, (size_t)(pwlen * sizeof(USHORT)+1));
+	  (void)memset ( (void *)syllable_for_hyph, 0, 20);
          }
          word_length += syllable_length;
      }
@@ -1448,6 +1482,7 @@ gen_word (char *word, char *hyphenated_word, USHORT pwlen, unsigned int pass_mod
     free ((char *) new_syllable);
     free ((char *) syllable_units);
     free ((char *) word_units);
+    free ((char *) syllable_for_hyph);
 
     return ((int) word_length);
 }
@@ -2228,11 +2263,19 @@ random_unit (USHORT type)
 
 
 /*
- * This routine should return a uniformly distributed Random number between
- * minlen and maxlen inclusive.  The Electronic Code Book form of CAST is
- * used to produce the Random number.  The inputs to CAST are the old pass-
- * word and a pseudoRandom key generated according to the procedure out-
- * lined in Appendix C of ANSI X9.17.
+** get_random() -
+** This routine should return a uniformly distributed Random number between
+** minlen and maxlen inclusive.  The Electronic Code Book form of CAST is
+** used to produce the Random number.  The inputs to CAST are the old pass-
+** word and a pseudoRandom key generated according to the procedure out-
+** lined in Appendix C of ANSI X9.17.
+** INPUT:
+**   USHORT - minimum
+**   USHORT - maximum
+** OUTPUT:
+**   USHORT - random number
+** NOTES:
+**   none.
 */
 
 USHORT
@@ -2244,10 +2287,16 @@ get_random (USHORT minlen, USHORT maxlen)
 }
 
 /*
-** This routine designed to modify sullable like this:
+** capitalize() - This routine designed to modify sullable like this:
 ** adel ----> Adel
 ** dot  ----> Dot
 ** etc.
+** INPUT:
+**   char * - syllable.
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
 */
 void capitalize (char *syllable)
 {
@@ -2267,27 +2316,141 @@ void capitalize (char *syllable)
  int i = 0;
  if ( randint(2) == TRUE)
   {
-   bcopy ((void *)syllable, (void *)&tmp, sizeof(tmp));
+   (void)memcpy((void *)&tmp, (void *)syllable, sizeof(tmp));
    for(i=0; i < 26; i++)
-    if ( let[i] == tmp ) bcopy ((void *)&clet[i], (void *)syllable, 1);
+     if ( let[i] == tmp )
+       if (is_restricted_symbol(clet[i]) != TRUE)
+         (void)memcpy ((void *)syllable, (void *)&clet[i], 1);
   }
 }
 
 /*
-** This routine designed to modify single-letter syllable like this:
+** numerize() - This routine designed to modify single-letter
+** syllable like this:
 ** a ----> 1 or 2 or 3 etc.
 ** u ----> 1 or 2 or 3 etc.
 ** etc.
+** INPUT:
+**   char * - single-letter syllable
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
 */
 void numerize (char *syllable)
 {
  char *tmp;
  if ( (tmp = (char *)calloc(1, 4)) == NULL)
     err_sys_fatal("calloc");
- if ( (randint(2) == TRUE) && (strlen (syllable) == 1) )
+ if ( strlen (syllable) == 1 )
       {
-       sprintf(tmp, "%d", randint(10));
-       bcopy ((void *)tmp, (void *)syllable, 1);
+       (void) gen_rand_symbol(tmp, S_NB);
+       (void)memcpy ((void *)syllable, (void *)tmp, 1);
       }
  free ((void *)tmp);
+}
+/*
+** specialize() - This routine designed to modify single-letter syllable
+** like this:
+** a ----> # or $ or % etc.
+** u ----> # or $ or % etc.
+** etc.
+** INPUT:
+**   char * - single-letter syllable.
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
+*/
+void specialize (char *syllable)
+{
+ char *tmp;
+ if ( (tmp = (char *)calloc(1, 4)) == NULL)
+    err_sys_fatal("calloc");
+ if ( strlen (syllable) == 1 )
+      {
+       (void) gen_rand_symbol(tmp, S_SS);
+       (void)memcpy ((void *)syllable, (void *)tmp, 1);
+      }
+ free ((void *)tmp);
+}
+
+/*
+** symb2name - convert symbol to it's name
+** INPUT:
+**   char * - one symbol syllable
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
+*/
+void
+symb2name(char * syllable, char * h_syllable)
+{
+ struct ssymb_names
+  {
+   char symbol;
+   char *name;
+  };
+ static struct ssymb_names ssn[42] =
+  {
+   {'1',"ONE"},
+   {'2',"TWO"},
+   {'3',"THREE"},
+   {'4',"FOUR"},
+   {'5',"FIVE"},
+   {'6',"SIX"},
+   {'7',"SEVEN"},
+   {'8',"EIGHT"},
+   {'9',"NINE"},
+   {'0',"ZERO"},
+   {33, "EXCLAMATION_POINT"},
+   {34, "QUOTATION_MARK"},
+   {35, "CROSSHATCH"},
+   {36, "DOLLAR_SIGN"},
+   {37, "PERCENT_SIGN"},
+   {38, "AMPERSAND"},
+   {39, "APOSTROPHE"},
+   {40, "LEFT_PARENTHESIS"},
+   {41, "RIGHT_PARENTHESIS"},
+   {42, "ASTERISK"},
+   {43, "PLUS_SIGN"},
+   {44, "COMMA"},
+   {45, "HYPHEN"},
+   {46, "PERIOD"},
+   {47, "SLASH"},
+   {58, "COLON"},
+   {59, "SEMICOLON"},
+   {60, "LESS_THAN"},
+   {61, "EQUAL_SIGN"},
+   {62, "GREATER_THAN"},
+   {63, "QUESTION_MARK"},
+   {64, "AT_SIGN"},
+   {91, "LEFT_BRACKET"},
+   {92, "BACKSLASH"},
+   {93, "RIGHT_BRACKET"},
+   {94, "CIRCUMFLEX"},
+   {95, "UNDERSCORE"},
+   {96, "GRAVE"},
+   {123, "LEFT_BRACE"},
+   {124, "VERTICAL_BAR"},
+   {125, "RIGHT_BRACE"},
+   {126, "TILDE"}
+  };
+ int i = 0;
+ int flag = FALSE;
+ 
+ if (strlen(syllable) == 1)
+    {
+     for (i=0;i<42;i++)
+      {
+       if(*syllable == ssn[i].symbol)
+        {
+         (void)memcpy((void*)h_syllable, (void*)ssn[i].name, strlen(ssn[i].name));
+	 flag = TRUE;
+        }
+      }
+     if (flag != TRUE)
+       (void)memcpy((void*)h_syllable, (void*)syllable, strlen(syllable));
+    }
 }

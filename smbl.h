@@ -26,30 +26,26 @@
 ** NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#ifndef APG_SMBL_H
+#define APG_SMBL_H    1
+struct sym smbl[94] = 
+{
+ {'a', S_SL}, {'b', S_SL}, {'c', S_SL}, {'d', S_SL}, {'e', S_SL}, {'f', S_SL},
+ {'g', S_SL}, {'h', S_SL}, {'i', S_SL}, {'j', S_SL}, {'k', S_SL}, {'l', S_SL},
+ {'m', S_SL}, {'n', S_SL}, {'o', S_SL}, {'p', S_SL}, {'q', S_SL}, {'r', S_SL},
+ {'s', S_SL}, {'t', S_SL}, {'u', S_SL}, {'v', S_SL}, {'w', S_SL}, {'x', S_SL},
+ {'y', S_SL}, {'z', S_SL}, {'A', S_CL}, {'B', S_CL}, {'C', S_CL}, {'D', S_CL},
+ {'E', S_CL}, {'F', S_CL}, {'G', S_CL}, {'H', S_CL}, {'I', S_CL}, {'I', S_CL},
+ {'K', S_CL}, {'K', S_CL}, {'M', S_CL}, {'N', S_CL}, {'O', S_CL}, {'P', S_CL},
+ {'Q', S_CL}, {'R', S_CL}, {'S', S_CL}, {'T', S_CL}, {'U', S_CL}, {'V', S_CL},
+ {'W', S_CL}, {'X', S_CL}, {'Y', S_CL}, {'Z', S_CL}, {'1', S_NB}, {'2', S_NB},
+ {'3', S_NB}, {'4', S_NB}, {'5', S_NB}, {'6', S_NB}, {'7', S_NB}, {'8', S_NB},
+ {'9', S_NB}, {'0', S_NB}, {33 , S_SS}, {34 , S_SS}, {35 , S_SS}, {36 , S_SS},
+ {37 , S_SS}, {38 , S_SS}, {39 , S_SS}, {40 , S_SS}, {41 , S_SS}, {42 , S_SS},
+ {43 , S_SS}, {44 , S_SS}, {45 , S_SS}, {46 , S_SS}, {47 , S_SS}, {58 , S_SS},
+ {59 , S_SS}, {60 , S_SS}, {61 , S_SS}, {62 , S_SS}, {63 , S_SS}, {64 , S_SS},
+ {91 , S_SS}, {92 , S_SS}, {93 , S_SS}, {94 , S_SS}, {95 , S_SS}, {96 , S_SS},
+ {123, S_SS}, {124, S_SS}, {125, S_SS}, {126, S_SS}
+};
 
-#ifndef RND_H
-#define RND_H	1
-
-#ifndef OWN_TYPES_H
-#include "owntypes.h"
-#endif /* OWN_TYPES_H */
-
-extern UINT32 __rnd_seed[2];
-
-#define RND_MX 0x7FFFFFFF
-#ifdef __OpenBSD__
-#define APG_DEVRANDOM "/dev/arandom"
-#else
-#define APG_DEVRANDOM "/dev/random"
-#endif /* __OpenBSD__ */
-#define APG_DEVURANDOM "/dev/urandom"
-
-extern void x917_setseed (UINT32 seed, int quiet);
-extern UINT randint (int n);
-#ifndef APG_USE_SHA
-UINT32 x917cast_rnd (void);
-#else /* APG_USE_SHA */
-UINT32 x917sha1_rnd (void);
-#endif /* APG_USE_SHA*/
-
-#endif /* RND_H */
+#endif /* APG_SMBL_H */

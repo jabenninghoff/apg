@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -29,24 +29,50 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <sys/time.h>
 #include "rnd.h"
-#include "./cast/cast.h"
+
+#ifndef APG_USE_SHA 
+#  include "./cast/cast.h"
+#else /* APG_USE_SHA */
+#  include "./sha/sha.h"
+#endif /* APG_USE_SHA */
 
 UINT32 __rnd_seed[2]; /* Random Seed 2*32=64 */
 
 /*
-** randint(int n) - Produces a Random number from 0 to n-1 .
+** randint(int n) - Produces a Random number from 0 to n-1.
+** INPUT:
+**   int - limit
+** OUTPUT:
+**   UINT - pandom number.
+** NOTES:
+**   none.
 */
 UINT
 randint(int n)
 {
+#ifndef APG_USE_SHA
  return ( (UINT)( x917cast_rnd() % (UINT32)n ) );
+#else /* APG_USE_SHA */
+ return ( (UINT)( x917sha1_rnd() % (UINT32)n ) );
+#endif /* APG_USE_SHA */
 }
 
+#ifndef APG_USE_SHA
 /*
 ** ANSI X9.17 pseudorandom generator that uses CAST algorithm instead of DES
 ** m = 1
+** INPUT:
+**   none.
+** OUTPUT:
+**   UINT32 - random number.
+** NOTES:
+**   none.
 */
 UINT32
 x917cast_rnd (void)
@@ -79,16 +105,71 @@ u8 ro_key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
  cast_encrypt (&ky, (u8 *)&Xi_plus_I[0], (u8*)&__rnd_seed[0]); /* s=Ek( Xi (+) I ) */
  return (Xi[0]);
 }
-
+#else /* APG_USE_SHA */
 /*
-** x917cast_setseed (UINT32 seed) - Initializes seed
-** UINT32 seed - seed value
+** ANSI X9.17 pseudorandom generator that uses SHA1 algorithm instead of DES
+** m=1
+** INPUT:
+**   none.
+** OUTPUT:
+**   UINT32 - random number.
+** NOTES:
+**   none.
+*/
+UINT32
+x917sha1_rnd (void)
+{
+ struct timeval local_time;
+ UINT32 I[2] = {0L,0L};
+ UINT32 I_plus_s[2] = {0L,0L};
+ UINT32 Xi[2] = {0L,0L};
+ UINT32 Xi_plus_I[2] = {0L,0L};
+
+ BYTE hash [SHA_DIGESTSIZE];
+ apg_SHA_INFO shaInfo;
+
+ (void) gettimeofday (&local_time, 0);
+ apg_shaInit ( &shaInfo );
+ apg_shaUpdate ( &shaInfo, (BYTE *)&local_time, 8);
+ apg_shaFinal ( &shaInfo, hash );
+ (void)memcpy ( (void *)&I[0], (void *)&hash[0], sizeof(I));
+ I_plus_s[0] = I[0] ^ __rnd_seed[0];                           /* I0 (+) s0        */
+ I_plus_s[1] = I[1] ^ __rnd_seed[1];                           /* I1 (+) s1        */
+
+ apg_shaInit(&shaInfo);
+ apg_shaUpdate( &shaInfo, (BYTE *)&I_plus_s, 8);
+ apg_shaFinal( &shaInfo, hash );
+ (void)memcpy ( (void *)&Xi[0], (void *)&hash[0], sizeof(Xi));        /* Xi=Ek( I (+) s ) */
+
+ Xi_plus_I[0] = Xi[0] ^ I[0];                                  /* Xi0 (+) I0       */
+ Xi_plus_I[1] = Xi[1] ^ I[1];                                  /* Xi1 (+) I1       */
+
+ apg_shaInit(&shaInfo);
+ apg_shaUpdate( &shaInfo, (BYTE *)&Xi_plus_I, 8);
+ apg_shaFinal(&shaInfo, hash);
+ (void)memcpy ( (void *)&__rnd_seed[0], (void *)&hash[0],
+         sizeof(__rnd_seed));                                  /* s=Ek( Xi (+) I ) */
+ return (Xi[0]);
+}
+#endif /* APG_USE_SHA */
+/*
+** x917_setseed (UINT32 seed) - Initializes seed
+** INPUT:
+**   UINT32 - seed value
+**   int - quiet mode flag
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
 */
 void
-x917cast_setseed (UINT32 seed)
+x917_setseed (UINT32 seed, int quiet)
 {
  FILE * dr;
  UINT32 drs[2];
+ UINT32 pid = 0;
+
+ pid = (UINT32)getpid();
 
  if ( (dr = fopen(APG_DEVRANDOM, "r")) != NULL)
   {
@@ -107,11 +188,14 @@ x917cast_setseed (UINT32 seed)
  else
   {
 #ifndef CLISERV
-   fprintf(stderr,"CAN NOT USE /dev/random TO GENERATE RANDOM SEED\n");
-   fprintf(stderr,"USEING LOCAL TIME FOR SEED GENERATION !!!\n");
-   fflush(stderr);
+   if (quiet != TRUE)
+    {
+     fprintf(stderr,"CAN NOT USE RANDOM DEVICE TO GENERATE RANDOM SEED\n");
+     fprintf(stderr,"USING LOCAL TIME AND PID FOR SEED GENERATION !!!\n");
+     fflush(stderr);
+    }
 #endif /* CLISERV */
-   __rnd_seed[0] = seed;
-   __rnd_seed[1] = seed;
+   __rnd_seed[0] = seed ^ pid;
+   __rnd_seed[1] = seed ^ pid;
   }
 }

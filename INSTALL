@@ -7,8 +7,8 @@ use them together.
 The simplest way to install this package is:
 1. untar the distribution and cd to the top:
 
-    % gzip -d -c apg-1.X.XX.tar.gz | tar xf -
-    % cd apg-1.X.XX
+    % gzip -d -c apg-2.X.XX.tar.gz | tar xf -
+    % cd apg-2.X.XX
 
 If you are reading this file, you probably have already done this!
 
@@ -27,6 +27,9 @@ If you are reading this file, you probably have already done this!
    For both:
 
      % make all
+
+During the make process compiler will generate some warnings
+Just ignore this fact. I'm working to fix them.
 
 4. install the binaries and man pages. You may need to be superuser
 to do this (depending on where you are installing things):

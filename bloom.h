@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -27,29 +27,47 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef RND_H
-#define RND_H	1
 
-#ifndef OWN_TYPES_H
-#include "owntypes.h"
-#endif /* OWN_TYPES_H */
 
-extern UINT32 __rnd_seed[2];
+/*
+** Header file  for bloom filter algorithm implementation
+*/
+#ifndef APG_BLOOM_H
+#define APG_BLOOM_H 1
 
-#define RND_MX 0x7FFFFFFF
-#ifdef __OpenBSD__
-#define APG_DEVRANDOM "/dev/arandom"
-#else
-#define APG_DEVRANDOM "/dev/random"
-#endif /* __OpenBSD__ */
-#define APG_DEVURANDOM "/dev/urandom"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <math.h>
 
-extern void x917_setseed (UINT32 seed, int quiet);
-extern UINT randint (int n);
-#ifndef APG_USE_SHA
-UINT32 x917cast_rnd (void);
-#else /* APG_USE_SHA */
-UINT32 x917sha1_rnd (void);
-#endif /* APG_USE_SHA*/
+#include "sha/sha.h"
 
-#endif /* RND_H */
+#define FSIZE_BIT(word_count) ((unsigned long int)(5.0/(1.0-pow( 0.84151068, 1.0/((double)word_count)))))
+#define FSIZE_BYTE(word_count) ((((unsigned long int)(5.0/(1.0-pow( 0.84151068, 1.0/((double)word_count)))))/8)+1)
+
+#define APGBFHDRSIZE      12
+
+#define TRUE              1
+#define FALSE             0
+
+#define MAX_DICT_STRLEN   255
+#define H_NUM   5
+
+typedef unsigned long int      h_val; /* should be 32-bit */
+typedef unsigned short int     flag;
+
+struct apg_bf_hdr {
+  char id[8];           /* ID          */
+  unsigned long int fs; /* filter size */
+};
+
+extern int insert_word(char *word, FILE *file, h_val filter_size);
+extern int check_word(char *word, FILE *file, h_val filter_size);
+extern FILE * create_filter(char * f_name, unsigned long int n_words); 
+extern FILE * open_filter(char * f_name, const char *mode); 
+extern int close_filter(FILE *f_dsk);
+extern h_val get_filtersize(FILE *f); 
+extern h_val count_words(FILE *dict_file);
+
+#endif /* APG_BLOOM_H */

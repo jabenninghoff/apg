@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -36,11 +36,17 @@
 #include <string.h>
 #include <time.h>
 
+#ifndef APG_USE_SHA
+# define APG_VERSION "2.1.0 (PRNG: X9.17/CAST)"
+#else /* APG_USE_SHA */
+# define APG_VERSION "2.1.0 (PRNG: X9.17/SHA-1)"
+#endif /* APG_USE_SHA */
+
 #ifdef __NetBSD__
 #include <unistd.h>
 #endif
 
-#define MAX_MODE_LENGTH   5
+#define MAX_MODE_LENGTH   4
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
@@ -51,7 +57,6 @@
 #endif
 
 #ifdef __CYGWIN__
-#include <getopt.h>
 #undef APG_USE_CRYPT
 #endif /* __CYGWIN__ */
 
@@ -67,20 +72,29 @@
 #include "pronpass.h"
 #include "randpass.h"
 #include "restrict.h"
+#include "bloom.h"
 #include "rnd.h"
 #include "errs.h"
+#include "getopt.h"
 
+ struct pass_m {
+        unsigned int pass;	         /* password generation mode        */
+        unsigned int filter;	         /* password generation mode        */
+	};
 #ifndef CLISERV
 UINT32 get_user_seq (void);
 UINT32 com_line_user_seq (char * seq);
-char *crypt_passstring (const char *p); /*!!*/
+char *crypt_passstring (const char *p);
 void print_help (void);
 #endif /* CLISERV */
 
 int main (int argc, char *argv[]);
 void checkopt(char *opt);
-unsigned int construct_mode(char *str_mode);
+int construct_mode(char *str_mode, struct pass_m * mde);
 
+/*
+** main()
+*/
 int
 main (int argc, char *argv[])
 {
@@ -96,8 +110,12 @@ main (int argc, char *argv[])
 
  int algorithm = 0;                      /* algorithm for generation        */
  int restrictions_present = FALSE;       /* restrictions flag               */
+ int bloom_restrict_present = FALSE;     /* bloom filter restrictions flag  */
+ int filter_restrict_present = FALSE;    /* filter restrictions flag        */
+ int exclude_list_present = FALSE;       /* exclude list present            */
+ int quiet_present = FALSE;              /* quiet mode flag                 */
  char *restrictions_file;                /* dictionary file name            */
- unsigned int pass_mode = 0;	         /* password generation mode        */
+ struct pass_m mode;
  unsigned int pass_mode_present = FALSE; /* password generation mode flag   */
  USHORT min_pass_length = 6;             /* min password length             */
  USHORT max_pass_length = 8;             /* max password length             */
@@ -144,50 +162,44 @@ main (int argc, char *argv[])
  */
 #ifndef CLISERV
 #ifdef APG_USE_CRYPT
- while ((option = getopt (argc, argv, "SNCLRM:a:r:sdc:n:m:x:hvy")) != -1)
+ while ((option = apg_getopt (argc, argv, "M:E:a:r:b:sdc:n:m:x:hvyq")) != -1)
 #else /* APG_USE_CRYPT */
- while ((option = getopt (argc, argv, "SNCLRM:a:r:sdc:n:m:x:hv")) != -1)
+ while ((option = apg_getopt (argc, argv, "M:E:a:r:b:sdc:n:m:x:hvq")) != -1)
 #endif /* APG_USE_CRYPT */
 #else /* CLISERV */
- while ((option = getopt (argc, argv, "SNCLRM:a:r:n:m:x:v")) != -1)
+ while ((option = apg_getopt (argc, argv, "M:E:a:r:b:n:m:x:v")) != -1)
 #endif /* CLISERV */
   {
    switch (option)
     {
-     case 'S': /* special symbols required */
-      pass_mode = pass_mode | S_SS;
-      pass_mode_present = TRUE;
-      break;
-     case 'R': /* special symbols required */
-      pass_mode = pass_mode | S_SS;
-      pass_mode = pass_mode | S_RS;
-      pass_mode_present = TRUE;
-      break;
-     case 'N': /* numbers required */
-      pass_mode = pass_mode | S_NB;
-      pass_mode_present = TRUE;
-      break;
-     case 'C': /* capital letters required */
-      pass_mode = pass_mode | S_CL;
-      pass_mode_present = TRUE;
-      break;
-     case 'L': /* small letters required */
-      pass_mode = pass_mode | S_SL;
-      pass_mode_present = TRUE;
-      break;
-     case 'M':
-      str_mode = optarg;
-      if( (pass_mode = construct_mode(str_mode)) == 0xFFFF)
+     case 'M': /* mode parameter */
+      str_mode = apg_optarg;
+      if( (construct_mode(str_mode,&mode)) == -1)
          err_app_fatal("construct_mode","wrong parameter");
       pass_mode_present = TRUE;
+      if(mode.filter != 0)
+        {
+         filter_restrict_present = TRUE;
+	 restrictions_present = TRUE;
+	}
+      break;
+     case 'E': /* exclude char */
+      if(set_exclude_list(apg_optarg)==-1)
+         err_app_fatal("set_exclude_list","string is too long (max. 93 characters)");
+      exclude_list_present = TRUE;
       break;
      case 'a': /* algorithm specification */
-      checkopt(optarg);
-      algorithm = atoi (optarg);
+      checkopt(apg_optarg);
+      algorithm = atoi (apg_optarg);
       break;
      case 'r': /* restrictions */
       restrictions_present = TRUE;
-      restrictions_file = optarg;
+      restrictions_file = apg_optarg;
+      break;
+     case 'b': /* bloom restrictions */
+      restrictions_present = TRUE;
+      bloom_restrict_present = TRUE;
+      restrictions_file = apg_optarg;
       break;
 #ifndef CLISERV
      case 's': /* user random seed required */
@@ -195,30 +207,33 @@ main (int argc, char *argv[])
       user_defined_seed_present = TRUE;
       break;
      case 'c': /* user random seed given in command line */
-      com_line_seq = optarg;
+      com_line_seq = apg_optarg;
       user_defined_seed = com_line_user_seq (com_line_seq);
       user_defined_seed_present = TRUE;
       break;
-     case 'd': /* No delinmiters option */
+     case 'd': /* no delimiters option */
       delimiter_flag_present = TRUE;
       break;
+     case 'q': /* quiet mode */
+      quiet_present = TRUE;
+      break;
 #ifdef APG_USE_CRYPT
-     case 'y': /* display crypt(3)'d text next to passwords */ /*!!*/
+     case 'y': /* display crypt(3)'d text next to passwords */
       show_crypt_text = TRUE;
       break;                                                                  
 #endif /* APG_USE_CRYPT */
 #endif /* CLISERV */
      case 'n': /* number of password specification */
-      checkopt(optarg);
-      number_of_pass = atoi (optarg);
+      checkopt(apg_optarg);
+      number_of_pass = atoi (apg_optarg);
       break;
      case 'm': /* min password length */
-      checkopt(optarg);
-      min_pass_length = (USHORT) atoi (optarg);
+      checkopt(apg_optarg);
+      min_pass_length = (USHORT) atoi (apg_optarg);
       break;
      case 'x': /* max password length */
-      checkopt(optarg);
-      max_pass_length = (USHORT) atoi (optarg);
+      checkopt(apg_optarg);
+      max_pass_length = (USHORT) atoi (apg_optarg);
       break;
 #ifndef CLISERV
      case 'h': /* print help */
@@ -227,8 +242,8 @@ main (int argc, char *argv[])
 #endif /* CLISERV */
      case 'v': /* print version */
       printf ("APG (Automated Password Generator)");
-      printf ("\nversion 1.2.13");
-      printf ("\nCopyright (c) 1999, 2000, 2001 Adel I. Mirzazhanov\n");
+      printf ("\nversion %s", APG_VERSION);
+      printf ("\nCopyright (c) 1999, 2000, 2001, 2002 Adel I. Mirzazhanov\n");
       return (0);
      default: /* print help end exit */
 #ifndef CLISERV
@@ -238,22 +253,25 @@ main (int argc, char *argv[])
     }
   }
  if (pass_mode_present != TRUE)
-    pass_mode = S_SS | S_NB | S_CL | S_SL;
+    mode.pass = S_SS | S_NB | S_CL | S_SL;
+ if (exclude_list_present == TRUE)
+    mode.pass = mode.pass | S_RS;
  if( (tme = time(NULL)) == ( (time_t)-1))
     err_sys("time");
  if (user_defined_seed_present != TRUE)
-    x917cast_setseed ( (UINT32)tme);
+    x917_setseed ( (UINT32)tme, quiet_present);
  else
-    x917cast_setseed (user_defined_seed ^ (UINT32)tme);
+    x917_setseed (user_defined_seed ^ (UINT32)tme, quiet_present);
  if (min_pass_length > max_pass_length)
     max_pass_length = min_pass_length;
  /* main code section */
  
  /*
  ** reserv space for password and hyphenated password and report of errors
+ ** 18 because the maximum length of element for hyphenated password is 17
  */
  if ( (pass_string = (char *)calloc (1, (size_t)(max_pass_length + 1)))==NULL ||
-      (hyph_pass_string = (char *)calloc (1, (size_t)(max_pass_length*2)))==NULL)
+      (hyph_pass_string = (char *)calloc (1, (size_t)(max_pass_length*18)))==NULL)
       err_sys_fatal("calloc");
 #ifndef CLISERV
 #ifdef APG_USE_CRYPT
@@ -263,7 +281,7 @@ main (int argc, char *argv[])
 #endif /* APG_USE_CRYPT */
 #endif /* CLISERV */
 #ifdef CLISERV
- if ( (out_pass = (char *)calloc(1, (size_t)(max_pass_length*3 + 4))) == NULL)
+ if ( (out_pass = (char *)calloc(1, (size_t)(max_pass_length*19 + 4))) == NULL)
       err_sys_fatal("calloc");
 #endif /* CLISERV */
  /*
@@ -275,18 +293,23 @@ main (int argc, char *argv[])
    if (algorithm == 0)
     {
      if (gen_pron_pass(pass_string, hyph_pass_string,
-                       min_pass_length, max_pass_length, pass_mode) == -1)
+                       min_pass_length, max_pass_length, mode.pass) == -1)
         err_app_fatal("apg","wrong password length parameter");
 #ifndef CLISERV
 #ifdef APG_USE_CRYPT
      if (show_crypt_text == TRUE)
-         bcopy ((void *)crypt_passstring (pass_string),
-	        (void *)crypt_string, 255);
+         (void) memcpy ((void *)crypt_string,
+	                (void *)crypt_passstring (pass_string), 255);
 #endif /* APG_USE_CRYPT */
 #endif /* CLISERV */
-     if (restrictions_present == 1)
+     if (restrictions_present == TRUE)
        {
-        restrict_res = check_pass(pass_string, restrictions_file);
+        if (filter_restrict_present == TRUE)
+	   restrict_res = filter_check_pass(pass_string, mode.filter);
+        else if (bloom_restrict_present == TRUE)
+           restrict_res = bloom_check_pass(pass_string, restrictions_file);
+	else
+           restrict_res = check_pass(pass_string, restrictions_file);
         switch (restrict_res)
 	  {
 	  case 0:
@@ -302,7 +325,7 @@ main (int argc, char *argv[])
 	       fprintf (stdout, "\n");
 	    fflush (stdout);
 #else /* CLISERV */
-            snprintf(out_pass, max_pass_length*3 + 4,
+            snprintf(out_pass, max_pass_length*19 + 4,
 	             "%s (%s)", pass_string, hyph_pass_string);	    
 	    write (0, (void*) out_pass, strlen(out_pass));
 	    write (0, (void*)&delim[0],2);
@@ -331,7 +354,7 @@ main (int argc, char *argv[])
 	   fprintf (stdout, "\n");
 	fflush (stdout);
 #else /* CLISERV */
-        snprintf(out_pass, max_pass_length*3 + 4,
+        snprintf(out_pass, max_pass_length*19 + 4,
 	         "%s (%s)", pass_string, hyph_pass_string);
 	write (0, (void*) out_pass, strlen(out_pass));
 	write (0, (void*)&delim[0],2);
@@ -342,18 +365,23 @@ main (int argc, char *argv[])
    else if (algorithm == 1)
     {
      if (gen_rand_pass(pass_string, min_pass_length,
-                       max_pass_length, pass_mode) == -1)
+                       max_pass_length, mode.pass) == -1)
         err_app_fatal("apg","wrong password length parameter");
 #ifndef CLISERV
 #ifdef APG_USE_CRYPT
      if (show_crypt_text == TRUE)
-         bcopy ((void *)crypt_passstring(pass_string),
-	        (void *)crypt_string, 255);
+         (void)memcpy ((void *)crypt_string,
+	               (void *)crypt_passstring(pass_string), 255);
 #endif /* APG_USE_CRYPT */
 #endif /* CLISERV */
-     if (restrictions_present == 1)
+     if ( (restrictions_present == TRUE))
        {
-        restrict_res = check_pass(pass_string, restrictions_file);
+        if (filter_restrict_present == TRUE)
+	   restrict_res = filter_check_pass(pass_string, mode.filter);
+        else if (bloom_restrict_present == TRUE)
+           restrict_res = bloom_check_pass(pass_string, restrictions_file);
+	else
+           restrict_res = check_pass(pass_string, restrictions_file);
         switch (restrict_res)
 	  {
 	  case 0:
@@ -424,8 +452,14 @@ main (int argc, char *argv[])
 
 #ifndef CLISERV
 /*
-** Routine that gets user random sequense and generates
-** sutable random seed according to it
+** get_user_seq() - Routine that gets user random sequense
+** and generates sutable random seed according to it.
+** INPUT:
+**   void
+** OUTPUT:
+**   UINT32 - random seed
+** NOTES:
+**   none
 */
 UINT32
 get_user_seq (void)
@@ -436,16 +470,22 @@ get_user_seq (void)
  printf ("\nPlease enter some random data (only first %d are significant)\n", sizeof(prom));
  seq = (char *)getpass("(eg. your old password):>");
  if (strlen(seq) < sizeof(prom))
-  bcopy((void *)seq, (void *)&prom[0], (int)strlen(seq));
+  (void)memcpy((void *)&prom[0], (void *)seq, (int)strlen(seq));
  else
-  bcopy((void *)seq, (void *)&prom[0], sizeof(prom));
+  (void)memcpy((void *)&prom[0], (void *)seq, sizeof(prom));
  sdres = prom[0]^prom[1];
  return (sdres);
 }
 
 /*
-** Routine that gets user random sequense from command line and generates
-** sutable random seed according to it
+** com_line_user_seq() - Routine that gets user random sequense
+** from command line and generates sutable random seed according to it
+** INPUT:
+**   char * - command line seed
+** OUTPUT:
+**   UINT32 - random seed
+** NOTES:
+**   none
 */
 UINT32
 com_line_user_seq (char * seq)
@@ -453,24 +493,35 @@ com_line_user_seq (char * seq)
  UINT32 prom[2] = { 0L, 0L };
  UINT32 sdres = 0L;
  if (strlen(seq) < sizeof (prom))
-  bcopy((void *)seq, (void *)&prom[0], (int)strlen(seq));
+  (void)memcpy((void *)&prom[0], (void *)seq, (int)strlen(seq));
  else
-  bcopy((void *)seq, (void *)&prom[0], sizeof(prom));
+  (void)memcpy((void *)&prom[0], (void *)seq, sizeof(prom));
  sdres = prom[0]^prom[1];
  return (sdres);
 }
 
+/*
+** print_help() - print help :)))
+** INPUT:
+**   none.
+** OUTPUT:
+**   help info to the stdout.
+** NOTES:
+**   none.
+*/
 void
 print_help (void)
 {
  printf ("\napg   Automated Password Generator\n");
  printf ("        Copyright (c) Adel I. Mirzazhanov\n");
- printf ("\napg   [-a algorithm] [-r file] [-S] [-C] [-L] [-R]\n");
- printf ("      [-N] [-M mode] [-n num_of_pass] [-m min_pass_len]\n");
- printf ("      [-x max_pass_len] [-c cl_seed] [-d] [-s] [-h] [-y]\n");
- printf ("\n-S -N -C -L -R  password modes\n");
- printf ("-M mode         new style pasword modes\n");
+ printf ("\napg   [-a algorithm] [-r file] \n");
+ printf ("      [-M mode] [-E char_string] [-n num_of_pass] [-m min_pass_len]\n");
+ printf ("      [-x max_pass_len] [-c cl_seed] [-d] [-s] [-h] [-y] [-q]\n");
+ printf ("\n-M mode         new style password modes\n");
+ printf ("-E char_string  exclude characters from password generation process\n");
  printf ("-r file         apply dictionary check against file\n");
+ printf ("-b filter_file  apply bloom filter check against filter_file\n");
+ printf ("                (filter_file should be created with apgbfm(1) utility)\n");
  printf ("-a algorithm    choose algorithm\n");
  printf ("                 1 - random password generation according to\n");
  printf ("                     password modes\n");
@@ -485,11 +536,21 @@ print_help (void)
 #ifdef APG_USE_CRYPT
  printf ("-y              print crypted passwords\n");
 #endif /* APG_USE_CRYPT */
+ printf ("-q              quiet mode (do not print warnings)\n");
  printf ("-h              print this help screen\n");
  printf ("-v              print version information\n");
 }
 
 #ifdef APG_USE_CRYPT
+/*
+** crypt_passstring() - produce crypted password.
+** INPUT:
+**   const char * - password string
+** OUTPUT:
+**   char * - crypted password 
+** NOTES:
+**   none.
+*/
 char * crypt_passstring (const char *p)
 {
  char salt[10];
@@ -499,6 +560,15 @@ char * crypt_passstring (const char *p)
 #endif /* APG_USE_CRYPT */
 #endif /* CLISERV */
 
+/*
+** checkopt() - check options.
+** INPUT:
+**   char * - options string.
+** OUTPUT:
+**   none.
+** NOTES:
+**   option should contain only numeral symbols.
+*/
 void
 checkopt(char *opt)
 {
@@ -511,9 +581,22 @@ checkopt(char *opt)
       err_app_fatal ("checkopt", "wrong option format");
 }
 
-unsigned int construct_mode(char *s_mode)
+/*
+** construct_mode() - construct mode for password
+** generation from string.
+** INPUT:
+**   char * - string mode.
+** OUTPUT:
+**   int - return code.
+**     0 - OK
+**    -1 - ERROR
+** NOTES:
+**   none.
+*/
+int construct_mode(char *s_mode, struct  pass_m * mde)
 {
  unsigned int mode = 0;
+ unsigned int filter = 0;
  int ch = 0;
  int i = 0;
  int str_length = 0;
@@ -521,7 +604,7 @@ unsigned int construct_mode(char *s_mode)
  str_length = strlen(s_mode);
  
  if (str_length > MAX_MODE_LENGTH)
-     return(0xFFFF);
+     return(-1);
  for (i=0; i < str_length; i++)
   {
    ch = (int)*s_mode;
@@ -529,19 +612,19 @@ unsigned int construct_mode(char *s_mode)
     {
      case 'S':
       mode = mode | S_SS;
+      filter = filter | S_SS;
       break;
      case 'N':
       mode = mode | S_NB;
+      filter = filter | S_NB;
       break;
      case 'C':
       mode = mode | S_CL;
+      filter = filter | S_CL;
       break;
      case 'L':
       mode = mode | S_SL;
-      break;
-     case 'R':
-      mode = mode | S_SS;
-      mode = mode | S_RS;
+      filter = filter | S_SL;
       break;
      case 's':
       mode = mode | S_SS;
@@ -555,15 +638,14 @@ unsigned int construct_mode(char *s_mode)
      case 'l':
       mode = mode | S_SL;
       break;
-     case 'r':
-      mode = mode | S_SS;
-      mode = mode | S_RS;
-      break;
      default:
-      mode = mode | 0xFFFF;
+      return(-1);
       break;
     }
    s_mode++;
   }
- return (mode);
+ mde->pass = mode;
+ mde->filter = filter;
+ return (0);
 }
+

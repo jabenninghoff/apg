@@ -2,17 +2,17 @@
 .\" Licensed under BSD-like License.
 .\" Created by Adel I. Mirzazhanov
 .\"
-.TH APG 1 "2001 Feb 13" "Automated Password Generator" "User Manual"
+.TH APG 1 "2002 Jun 11" "Automated Password Generator" "User Manual"
 .SH NAME
 apg
 \- generates several random passwords
 
 .SH SYNOPSIS
 .B apg
-[\fB-r\fP \fIdictfile\fP]
-[\fB-a algorithm\fP] [\fB-C\fP] [\fB-L\fP] [\fB-S\fP] [\fB-N\fP] [\fB-R\fP]
-[\fB-M mode\fP] [\fB-m min_pass_len\fP] [\fB-x max_pass_len\fP] [\fB-n num_of_pass\fP]
-[\fB-s\fP] [\fB-c cl_seed\fP] [\fB-d\fP] [\fB-y\fP] [\fB-h\fP] [\fB-v\fP]
+[\fB-a algorithm\fP] [\fB-M mode\fP] [\fB-E char_string\fP]
+[\fB-n num_of_pass\fP] [\fB-m min_pass_len\fP] [\fB-x max_pass_len\fP]
+[\fB-r\fP \fIdictfile\fP] [\fB-b\fP \fIfilter_file\fP]
+[\fB-s\fP] [\fB-c cl_seed\fP] [\fB-d\fP] [\fB-y\fP] [\fB-q\fP] [\fB-h\fP] [\fB-v\fP]
 .PP
 .SH DESCRIPTION
 .B apg
@@ -51,6 +51,8 @@ or
 .B RFC1750
 with exception that it uses
 .I CAST
+or
+.I SHA-1
 instead of
 .I Triple DES.
 It uses local time with precision of microseconds (see
@@ -59,16 +61,21 @@ initial random seed.
 .PP
 .B apg
 also have the ability to check generated password quality using
-dictionary. You can use this ability if you specify command-line option
+dictionary. You can use this ability if you specify command-line options
 .B -r
 .I dictfile
-where \fIdictfile\fP is dictionary file name. In that dictionary you may place words
+or
+.B -b
+.I filtername
+where \fIdictfile\fP is the dictionary file name and \fIfiltername\fP is the
+name of Bloom filter file. In that dictionary you may place words
 (one per line) that should not appear as generated passwords. For example: user names,
 common words, etc. You even can use one of the dictionaries that come with
 .I dictionary password crackers.
-This check is case sensitive. For example, if you want to reject word 'root',
-you should insert in \fIdictfile\fP words: root, Root, RoOt, ... , ROOT.
-It is not the easiest way to check password quality, but
+Bloom filter file should be created with \fBapgbfm\fP(1) utility included
+in apg distribution. These checks are case sensitive. For example, if you want
+to reject word 'root', you should insert in \fIdictfile\fP words: root, Root,
+RoOt, ... , ROOT. It is not the easiest way to check password quality, but
 it is the most powerful way. In future releases I plan to implement some other
 techniques to check passwords (like pattern check) just to make life easier.
 .sp
@@ -76,63 +83,55 @@ techniques to check passwords (like pattern check) just to make life easier.
 .TP
 .B -M mode
 Use symbolsets specified with \fBmode\fP for password generation.
-\fBmode\fP is a text string consisting of characters \fBS[s]\fP, \fBN[n]\fP,
-\fBC[c]\fP, \fBL[l]\fP,\fBR[r]\fP. Where:
+\fBmode\fP is a text string consisting of characters \fBS\fP, \fBs\fP, \fBN\fP, \fBn\fP,
+\fBC\fP, \fBc\fP, \fBL\fP, \fBl\fP. Where:
 .RS
 .TP
-.B S[s]
-use special symbol set (for random character password generation algorithm only).
+.B S
+generator \fBmust\fP use special symbol set for every generated password.
 .TP
-.B N[n]
-use numeral symbol set.
+.B s
+generator \fBshould\fP use special symbol set for password generation.
 .TP
-.B C[c]
-use capital symbol set.
+.B N
+generator \fBmust\fP use numeral symbol set for every generated password.
 .TP
-.B L[l]
-use small letters symbol set (always present if pronounceable password
+.B n
+generator \fBshould\fP use numeral symbol set for password generation.
+.TP
+.B C
+generator \fBmust\fP use capital symbol set for every generated password.
+.TP
+.B c
+generator \fBshould\fP use capital symbol set for password generation.
+.TP
+.B L
+generator \fBmust\fP use small letters symbol set for every generated password
+(always present if pronounceable password
 generation algorithm is used).
 .TP
-.B R[r]
-the same as \fBS[s]\fP but it does not generate symbols \fB`\fP, \fB'\fP,
-\fB"\fP, \fB|\fP, \fB$\fP, \fBbackslash\fP, \fB?\fP. Usefull for password generation in
-a shell script. (For random character password generation algorithm only).
+.B l
+generator \fBshould\fP use small letters symbol set for password generation.
+.TP
+.B R,r
+not supported any more. Use \fB-E char_string\fP option instead.
 .RE
 .RS
 .br
-\fBmode\fP can not be more then 5 characters in
+\fBmode\fP can not be more than 4 characters in
 length.
+.PP
+.B Note:
+.br
+Usage of L, M, N, C will slow down password generation process.
 .PP
 .B Examples:
 .br
 \fB-M sncl\fP or \fB-M SNCL\fP or \fB-M Cn\fP
 .PP
-\fB-M mode\fP is the new style password generation mode definition, but the old style
-options(-C, -N, -S, -L, -R) are also supported.
+\fB-M mode\fP is the new style password generation mode definition. Old style
+options(-C, -N, -S, -L, -R) are not supported any more.
 .RE
-.TP
-.B -S
-use special symbol set. For random character password generation algorithm only.
-(old style - use \fB-M mode\fP instead).
-.TP
-.B -R
-the same as \fB-S\fP but it does not generate symbols \fB`\fP, \fB'\fP,
-\fB"\fP, \fB|\fP, \fB$\fP, \fBbackslash\fP, \fB?\fP. Usefull for password generation in
-a shell script. For random character password generation algorithm only.
-(old style - use \fB-M mode\fP instead).
-.TP
-.B -N
-use numeral symbol set.
-(old style - use \fB-M mode\fP instead).
-.TP
-.B -C
-use capital symbol set.
-(old style - use \fB-M mode\fP instead).
-.TP
-.B -L
-use small letters symbol set. Always present if pronounceable password
-generation algorithm is used.
-(old style - use \fB-M mode\fP instead).
 .TP
 .B -a algorithm
 use 
@@ -146,9 +145,44 @@ for password generation.
 - random character password generation
 .RE
 .TP
+.B -E char_string
+exclude characters in \fBchar_string\fP from password generation process (in pronounceable
+password generation mode you can not exclude small letters). To include special symbols that
+can be recognized by shell (apostrophe, quotes, dollar sign, etc.) in \fBchar_string\fP use
+the backslashed versions.
+.RS
+.PP
+.B Examples:
+.PP
+Command \fBapg -a 1 -M n -n 3 -m 8 -e 23456789\fP will generate a set of passwords that
+will look like this
+.br
+\fB10100110\fP
+.br
+\fB01111000\fP
+.br
+\fB11011101\fP
+.br
+.PP
+Command \fBapg -a 1 -M nc -n 3 -m 26 -e GHIJKLMNOPQRSTUVWXYZ\fP will generate a set of passwords
+that will look like this
+.br
+\fB16A1653CD4DE5E7BD9584A3476\fP
+.br
+\fBC8F78E06944AFD57FB9CB882BC\fP
+.br
+\fB8C8DF37CD792D36D056BBD5002\fP
+.br
+.RE
+.TP
 .B -r \fIdictfile\fP
 check generated passwords for their appearance in 
-.B dictfile
+.I dictfile
+.TP
+.B -b \fIfilter_file\fP
+check generated passwords for their appearance in 
+\fIfilter_file\fP. \fIfilter_file\fP should be created with \fBapgbfm\fP(1)
+utility.
 .TP
 .B -s
 ask user for random sequence for password generation
@@ -183,18 +217,19 @@ Default maximum password length is 8.
 .B -y
 print generated passwords and crypted passwords (see man \fBcrypt\fP(3))
 .TP
+.B -q
+quiet mode (do not print warnings)
+.TP
 .B -h
 print help information and exit
 .TP
 .B -v
 print version information and exit
 .SH "DEFAULT OPTIONS"
-\fBapg -a 0 -N -C -L -n 6 -x 8 -m 6\fP (old style)
-.br
-\fBapg -a 0 -M NCL -n 6 -x 8 -m 6\fP (new style)
+\fBapg -a 0 -M ncl -n 6 -x 8 -m 6\fP (new style)
 .PP
-If you want to generate realy secure passwords,
-you should use option \fB-s\fP. To simlify
+If you want to generate really secure passwords,
+you should use option \fB-s\fP. To simplify
 .B apg
 usage, you can write a small shell script. For example:
 .br
@@ -219,8 +254,7 @@ message about it.
 .B None.
 If you've found one, please send bug description to the author.
 .SH "SEE ALSO"
-.B apgd
-(8)
+\fBapgd\fP(8), \fBapgbfm\fP(1)
 .SH "AUTHOR"
 Adel I. Mirzazhanov, <a-del@iname.com>
 .br

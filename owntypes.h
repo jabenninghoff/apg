@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@
 #ifndef OWN_TYPES_H
 #define OWN_TYPES_H	1
 
-typedef unsigned char	      BYTE;
 typedef unsigned int	      UINT;
 typedef unsigned short	      USHORT;
 typedef short int	      SHORT;
@@ -39,5 +38,7 @@ typedef unsigned long int     UINT32;
 
 #define TRUE	1
 #define FALSE	0
+
+#define APG_MAX_PASSWORD_LENGTH 255
 
 #endif /* OWN_TYPES_H */

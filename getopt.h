@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -27,29 +27,12 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef RND_H
-#define RND_H	1
+#ifndef APG_GETOPT_H
+#define APG_GETOPT_H	1
 
-#ifndef OWN_TYPES_H
-#include "owntypes.h"
-#endif /* OWN_TYPES_H */
+extern char *	apg_optarg;		/* global argument pointer */
+extern int	apg_optind;		/* global argv index */
 
-extern UINT32 __rnd_seed[2];
+extern int apg_getopt(int argc,char *argv[],const char *optstring);
 
-#define RND_MX 0x7FFFFFFF
-#ifdef __OpenBSD__
-#define APG_DEVRANDOM "/dev/arandom"
-#else
-#define APG_DEVRANDOM "/dev/random"
-#endif /* __OpenBSD__ */
-#define APG_DEVURANDOM "/dev/urandom"
-
-extern void x917_setseed (UINT32 seed, int quiet);
-extern UINT randint (int n);
-#ifndef APG_USE_SHA
-UINT32 x917cast_rnd (void);
-#else /* APG_USE_SHA */
-UINT32 x917sha1_rnd (void);
-#endif /* APG_USE_SHA*/
-
-#endif /* RND_H */
+#endif /* APG_GETOPT_H */

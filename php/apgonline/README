@@ -1,0 +1,39 @@
+APG Online is the PHP frontend for Automated Password Generator
+
+It is tested with apg-2.1.0, apache-2.0.40 and php-4.2.3
+
+INSTALL
+ 1. Install Apache with PHP support (see Apache and PHP documentation).
+ 
+ 2. Copy index.php to SOME_DIRECTORY inside Apache's document root
+
+       Example:
+         mkdir /usr/local/apache/htdocs/apgonline
+         cp index.php /usr/local/apache/htdocs/apgonline
+
+ 3. Copy dictionary file to the SOME_DIRECTORY/lang directory.
+
+       Example:
+         cp lang/english.php /usr/local/apache/htdocs/apgonline/lang
+
+ 4. Copy theme file to the SOME_DIRECTORY/themes directory.
+
+       Example:
+         cp themes/default.php /usr/local/apache/htdocs/apgonline/themes
+
+ 4. Edit "Config data" section of index.php
+
+ 5. Open URL http://your.server.name/apgonline/index.php with Your
+    favorite browser.
+
+NOTES
+ a) APG Online uses cookie to save Your settings, so You should enable
+ cookie support in Your browser settings.
+ 
+ b) I'm not a designer, so themes included in APG distribution is just to
+ demonstrate a new feature. You can suggest your own theme to include in the
+ APG distribution.
+ 
+ c) Password quality checks are not supported in PHP frontend because,
+ if implemented, it can slow down your web server. But you can add
+ support for them at your own risk.

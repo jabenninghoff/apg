@@ -1,0 +1,235 @@
+                     pronunciation guide for unix
+                               29 Apr 97
+
+
+
+
+       How do I pronounce "vi" , or "!", or "/*", or ...?
+    You can start a very long and pointless discussion by wondering
+    about this topic on the net.  Some people say "vye", some say
+    "vee-eye" (the vi manual suggests this) and some Roman numerologists
+    say "six".  How you pronounce "vi" has nothing to do with whether
+    or not you are a true Unix wizard.
+
+    Similarly, you'll find that some people pronounce "char" as "care",
+    and that there are lots of ways to say "#" or "/*" or "!" or
+    "tty" or "/etc".  No one pronunciation is correct - enjoy the regional
+    dialects and accents.
+
+    Since this topic keeps coming up on the net, here is a comprehensive
+    pronunciation list that has made the rounds.
+
+			The Pronunciation Guide
+			-----------------------
+			      version 2.5
+
+Names derived from UNIX are marked with *, names derived from C are marked
+with +, names derived from (Net)Hack are marked with & and names deserving
+further explanation are marked with a #.  The explanations will be given at
+the very end.
+
+------------------------------------------------------------------------------
+			   -- SINGLE CHARACTERS --
+
+     SPACE, blank, ghost&
+
+!    EXCLAMATION POINT, exclamation (mark), (ex)clam, excl, wow, hey, boing,
+	bang#, shout, yell, shriek, pling, factorial, ball-bat, smash, cuss,
+	store#, potion&, not*+, dammit*#
+
+"    QUOTATION MARK, (double) quote, dirk, literal mark, rabbit ears,
+	double ping, double glitch, amulet&, web&, inverted commas
+
+#    CROSSHATCH, pound, pound sign, number, number sign, sharp, octothorpe#,
+	hash, (garden) fence, crunch, mesh, hex, flash, grid, pig-pen,
+	tictactoe, scratch (mark), (garden) gate, hak, oof, rake, sink&,
+	corridor&, unequal#, punch mark
+
+$    DOLLAR SIGN, dollar, cash, currency symbol, buck, string#, escape#, 
+	ding, big-money, gold&, Sonne#
+
+%    PERCENT SIGN, percent, mod+, shift-5, double-oh-seven, grapes, food&
+
+&    AMPERSAND, and, amper, address+, shift-7, andpersand, snowman,
+	bitand+, donald duck#, daemon&, background*, pretzel
+
+'    APOSTROPHE, (single) quote, tick, prime, irk, pop, spark, glitch,
+	lurker above&
+
+*    ASTERISK, star, splat, spider, aster, times, wildcard*, gear, dingle,
+	(Nathan) Hale#, bug, gem&, twinkle, funny button#, pine cone, glob*
+
+()   PARENTHESES, parens, round brackets, bananas, ears, bowlegs
+(    LEFT PARENTHESIS,  (open) paren,  so,  wane,  parenthesee,   open,  sad,
+	tool&
+)    RIGHT PARENTHESIS, already, wax, unparenthesee, close (paren), happy,
+	thesis, weapon&
+
++    PLUS SIGN, plus, add, cross, and, intersection, door&, spellbook&
+
+,    COMMA, tail, trapper&
+
+-    HYPHEN, minus (sign), dash, dak, option, flag, negative (sign), worm,
+	bithorpe#
+
+.    PERIOD, dot, decimal (point), (radix) point, spot, full stop,
+	put#, floor&
+
+/    SLASH, stroke, virgule, solidus, slant, diagonal, over, slat, slak,
+	across#, compress#, reduce#, replicate#, spare, divided-by, wand&,
+	forward slash, shilling#
+
+:    COLON, two-spot, double dot, dots, chameleon&
+
+;    SEMICOLON, semi, hybrid, giant eel&, go-on#
+
+<>   ANGLE BRACKETS, angles, funnels, brokets, pointy brackets, widgets
+<    LESS THAN,    less, read from*, from*,        in*,  comesfrom*, crunch,
+	sucks, left chevron#, open pointy (brack[et]), bra#, upstairs&, west,
+	(left|open) widget
+>    GREATER THAN, more, write to*,  into/toward*, out*, gazinta*,   zap,
+	blows, right chevron#, closing pointy (brack[et]), ket#, downstairs&,
+	east, (right|close) widget
+
+=    EQUAL SIGN, equal(s), gets, becomes, quadrathorpe#, half-mesh, ring&
+
+?    QUESTION MARK, question, query, whatmark, what, wildchar*, huh, ques,
+	kwes, quiz, quark, hook, scroll&, interrogation point
+
+@    AT SIGN, at, each, vortex, whirl, whirlpool, cyclone, snail, ape (tail),
+	cat, snable-a#, trunk-a#, rose, cabbage, Mercantile symbol, strudel#,
+	fetch#, shopkeeper&, human&, commercial-at, monkey (tail)
+
+[]   BRACKETS, square brackets, U-turns, edged parentheses
+[    LEFT BRACKET,  bracket,   bra, (left) square (brack[et]),   opensquare,
+	armor&
+]    RIGHT BRACKET, unbracket, ket, right square (brack[et]), unsquare, close,
+	mimic&
+
+\    BACKSLASH, reversed virgule, bash, (back)slant, backwhack, backslat,
+	escape*, backslak, bak, scan#, expand#, opulent throne&, slosh, slope,
+	blash
+
+^    CIRCUMFLEX, caret, carrot, (top)hat, cap, uphat, party hat, housetop, 
+	up arrow, control, boink, chevron, hiccup, power, to-the(-power), fang,
+	sharkfin, and#, xor+, wok, trap&, pointer#, pipe*, upper-than#
+
+_    UNDERSCORE, underline, underbar, under, score, backarrow, flatworm, blank,
+	chain&, gets#, dash#, sneak
+
+`    GRAVE, (grave/acute) accent, backquote, left/open quote, backprime, 
+	unapostrophe, backspark, birk, blugle, backtick, push, backglitch,
+	backping, execute#, boulder&, rock&, blip
+
+{}   BRACES, curly braces, squiggly braces, curly brackets, squiggle brackets,
+	Tuborgs#, ponds, curly chevrons#, squirrly braces, hitchcocks#,
+	chippendale brackets#
+{    LEFT BRACE,  brace,   curly,   leftit, embrace,  openbrace, begin+,
+	fountain&
+}    RIGHT BRACE, unbrace, uncurly, rytit,  bracelet, close,     end+, a pool&
+
+|    VERTICAL BAR, pipe*, pipe to*, vertical line, broken line#, bar, or+,
+	bitor+, vert, v-bar, spike, to*, gazinta*, thru*, pipesinta*, tube,
+	mark, whack, gutter, wall&
+
+~    TILDE, twiddle, tilda, tildee, wave, squiggle, swung dash, approx, 
+	wiggle, enyay#, home*, worm, not+
+
+
+			-- MULTIPLE CHARACTER STRINGS --
+
+!?	interrobang (one overlapped character)
+*/	asterslash+, times-div#
+/*   	slashterix+, slashaster
+:=	becomes#
+<-	gets
+<<	left-shift+, double smaller
+<>	unequal#
+>>	appends*, cat-astrophe, right-shift+, double greater
+->	arrow+, pointer to+, hiccup+
+#!	sh'bang, wallop
+\!*	bash-bang-splat
+()	nil#
+&&	and+, and-and+, amper-amper, succeeds-then*
+||	or+, or-or+, fails-then*
+
+
+				-- NOTES --
+
+! bang		comes from old card punch phenom where punching ! code made a
+		loud noise; however, this pronunciation is used in the (non-
+		computerized) publishing and typesetting industry in the U.S.
+		too, so ...
+		Alternatively it could have come from comic books, where the
+		words each character utters are shown in a "balloon" near that
+		character's head.  When one character shoots another, it is
+		common to see a balloon pointing at the barrel of the gun to
+		denote that the gun had been fired, not merely aimed. 
+		That balloon contained the word "!" -- hence, "!" == "Bang!" 
+! store		from FORTH
+! dammit	as in "quit, dammit!" while exiting vi and hoping one hasn't
+		clobbered a file too badly
+# octothorpe	from Bell System (orig. octalthorpe)
+# unequal	e.g. Modula-2
+$ string	from BASIC
+$ escape	from TOPS-10
+$ Sonne		In the "socialist" countries they used and are using all kinds
+		of IBM clones (hardware + sw). It was a common practice just
+		to rename everything (IBM 360 --> ESER 1040 etc.).
+		Of course the "dollar" sign had to be renamed - it became the
+		"international currency symbol" which looks like a circle with
+		4 rays spreading from it:
+			  ____
+			\/    \/
+			/      \
+			\      /
+			/\____/\
+
+		Because it looks like a (small) shining sun, in the German
+		Democratic Republic it was usually called "Sonne" (sun).
+& donald duck	from the Danish "Anders And", which means "Donald Duck"
+* splat		from DEC "spider" glyph
+* Nathan Hale	"I have but one asterisk for my country."
+* funny button	at Pacific Bell, * was referred to by employees as the "funny
+		button", which did not please management at all when it became
+		part of the corporate logo of Pacific Telesis, the holding
+		company ...
+*/ times-div	from FORTH
+= quadrathorpe	half an octothorpe
+- bithorpe	half a quadrathorpe (So what's a monothorpe?)
+. put		Victor Borge's Phonetic Punctuation which dates back to the
+		middle 1950's
+/ across	APL
+/ compress	APL
+/ reduce	APL
+/ replicate	APL
+/ shilling	from the British currency symbol
+:= becomes	e.g. Pascal
+; go-on		Algol68
+< left chevron	from the military: worn vertically on the sleeve to signify
+		rating
+< bra		from quantum mechanics
+<> unequal	e.g. Pascal
+> right chevron	see "< left chevron"
+> ket		from quantum mechanics
+@ snable-a	from Danish; may translate as "trunk-a"
+@ trunk-a	"trunk" = "elephant nose"
+@ strudel	as in Austrian apple cake
+@ fetch		from FORTH
+\ scan		APL
+\ expand	APL
+^ and		from formal logic
+^ pointer	from PASCAL
+^ upper-than	cf. > and <
+_ gets		some alternative representation of underscore resembles a
+		backarrow
+_ dash		as distinct from '-' == minus
+` execute	from shell command substitution
+{} Tuborgs	from advertizing for well-known Danish beverage
+{} curly chevr.	see "< left chevron"
+{} hitchcocks	from the old Alfred Hitchcock show, with the stylized profile
+		of the man
+{} chipp. br.	after Chippendale chairs
+| broken line	EBCDIC has two vertical bars, one solid and one broken.
+~ enyay		from the Spanish n-tilde
+() nil		LISP

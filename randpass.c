@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -37,34 +37,21 @@
 #include <pwd.h>
 #include <unistd.h>
 #include "randpass.h"
+
 #include "owntypes.h"
-struct sym
- {
-  char   ch;
-  USHORT type;
- };
-static struct sym smbl[94] = 
-{
- {'a', S_SL}, {'b', S_SL}, {'c', S_SL}, {'d', S_SL}, {'e', S_SL}, {'f', S_SL},
- {'g', S_SL}, {'h', S_SL}, {'i', S_SL}, {'j', S_SL}, {'k', S_SL}, {'l', S_SL},
- {'m', S_SL}, {'n', S_SL}, {'o', S_SL}, {'p', S_SL}, {'q', S_SL}, {'r', S_SL},
- {'s', S_SL}, {'t', S_SL}, {'u', S_SL}, {'v', S_SL}, {'w', S_SL}, {'x', S_SL},
- {'y', S_SL}, {'z', S_SL}, {'A', S_CL}, {'B', S_CL}, {'C', S_CL}, {'D', S_CL},
- {'E', S_CL}, {'F', S_CL}, {'G', S_CL}, {'H', S_CL}, {'I', S_CL}, {'I', S_CL},
- {'K', S_CL}, {'K', S_CL}, {'M', S_CL}, {'N', S_CL}, {'O', S_CL}, {'P', S_CL},
- {'Q', S_CL}, {'R', S_CL}, {'S', S_CL}, {'T', S_CL}, {'U', S_CL}, {'V', S_CL},
- {'W', S_CL}, {'X', S_CL}, {'Y', S_CL}, {'Z', S_CL}, {'1', S_NB}, {'2', S_NB},
- {'3', S_NB}, {'4', S_NB}, {'5', S_NB}, {'6', S_NB}, {'7', S_NB}, {'8', S_NB},
- {'9', S_NB}, {'0', S_NB}, {33 , S_SS}, {34 , S_SS|S_RS}, {35 , S_SS}, {36 , S_SS|S_RS},
- {37 , S_SS}, {38 , S_SS}, {39 , S_SS|S_RS}, {40 , S_SS}, {41 , S_SS}, {42 , S_SS},
- {43 , S_SS}, {44 , S_SS}, {45 , S_SS}, {46 , S_SS}, {47 , S_SS}, {58 , S_SS},
- {59 , S_SS}, {60 , S_SS}, {61 , S_SS}, {62 , S_SS}, {63 , S_SS|S_RS}, {64 , S_SS},
- {91 , S_SS}, {92 , S_SS|S_RS}, {93 , S_SS}, {94 , S_SS}, {95 , S_SS}, {96 , S_SS|S_RS},
- {123, S_SS}, {124, S_SS|S_RS}, {125, S_SS}, {126, S_SS}
-};
+#include "smbl.h"
 
 /*
 ** gen_rand_pass - generates random password of specified type
+** INPUT:
+**   char * - password string.
+**   int    - minimum password length.
+**   int    - maximum password length.
+**   unsigned int - password generation mode.
+** OUTPUT:
+**   int - password length or -1 on error.
+** NOTES:
+**   none.
 */
 int
 gen_rand_pass (char *password_string, int minl, int maxl, unsigned int pass_mode)
@@ -77,7 +64,8 @@ gen_rand_pass (char *password_string, int minl, int maxl, unsigned int pass_mode
   int max_weight = 0;
   int max_weight_element_number = 0;
 
-  if (minl > 256 || maxl > 256 || minl < 1 || maxl < 1 || minl > maxl)
+  if (minl > APG_MAX_PASSWORD_LENGTH || maxl > APG_MAX_PASSWORD_LENGTH ||
+      minl < 1 || maxl < 1 || minl > maxl)
       return (-1);
   for (i = 0; i <= 93; i++) random_weight[i] = 0; 
   length = minl + randint(maxl-minl+1);
@@ -87,8 +75,8 @@ gen_rand_pass (char *password_string, int minl, int maxl, unsigned int pass_mode
     {
 /* Asign random weight in weight array if mode is present*/
       for (j = 0; j <= 93 ; j++)
-/*!!!*/  if ( ((pass_mode & smbl[j].type) > 0) &&
-	     !((pass_mode & smbl[j].type) == 0x12))
+         if ( ( (pass_mode & smbl[j].type) > 0) &&
+	     !( (S_RS & smbl[j].type) > 0))
 	    random_weight[j] = 1 + randint(20000);
       j = 0;
 /* Find an element with maximum weight */
@@ -107,4 +95,67 @@ gen_rand_pass (char *password_string, int minl, int maxl, unsigned int pass_mode
     }
   *str_pointer = 0;
   return (length);
+}
+
+/*
+** gen_rand_symbol - generates random password of specified type
+** INPUT:
+**   char * - symbol.
+**   unsigned int - symbol type.
+** OUTPUT:
+**   int - password length or -1 on error.
+** NOTES:
+**   none.
+*/
+int
+gen_rand_symbol (char *symbol, unsigned int mode)
+{
+  int j = 0;
+  char *str_pointer;
+  int random_weight[94];
+  int max_weight = 0;
+  int max_weight_element_number = 0;
+
+  for (j = 0; j <= 93; j++) random_weight[j] = 0; 
+  str_pointer = symbol;
+  j = 0;
+/* Asign random weight in weight array if mode is present*/
+  for (j = 0; j <= 93 ; j++)
+     if ( ( (mode & smbl[j].type) > 0) &&
+         !( (S_RS & smbl[j].type) > 0))
+	   random_weight[j] = 1 + randint(20000);
+  j = 0;
+/* Find an element with maximum weight */
+  for (j = 0; j <= 93; j++)
+     if (random_weight[j] > max_weight)
+       {
+        max_weight = random_weight[j];
+        max_weight_element_number = j;
+       }
+/* Get password symbol */
+  *str_pointer = smbl[max_weight_element_number].ch;
+  max_weight = 0;
+  max_weight_element_number = 0;
+  return (0);
+}
+
+/*
+** is_restricted_symbol - detcts if symbol is restricted rigt now
+** INPUT:
+**   char - symbol.
+** OUTPUT:
+**   int - 0 - not restricted
+**         1 - restricted
+** NOTES:
+**   none.
+*/
+int
+is_restricted_symbol (char symbol)
+{
+  int j = 0;
+  for (j = 0; j <= 93 ; j++)
+    if (symbol == smbl[j].ch)
+      if ((S_RS & smbl[j].type) > 0)
+        return(1);
+  return(0);
 }
