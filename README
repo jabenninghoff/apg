@@ -1,6 +1,7 @@
-APG v1.2.12 was tested and found working on:
+APG v1.2.13 was tested and found working on:
 
    i386 FreeBSD 4.0-RELEASE
+   NetBSD (reported by Tomasz Luchowski <zuntum@eik.pl>)
    i386 Linux-Mandrake 6.0
    i386 Linux-Redhat 7.0
    i386 Linux-Mandrake 7.2 (reported by Andrew J. Caird <acaird@advance-inc.com>)

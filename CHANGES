@@ -1,5 +1,10 @@
+apg-1.2.13
+    Added support for NetBSD.
+    (Thanks to Tomasz Luchowski <zuntum@eik.pl>).
+
 apg-1.2.12
-    Added support for AIX, and some compatibility reports
+    Added support for AIX, and some compatibility reports.
+    (Thanks to Philip Le Riche <pleriche@uk03.bull.co.uk>).
 
 apg-1.2.11
     Changed default owner of apg and apgd (now it is root).
@@ -13,7 +18,7 @@ apg-1.2.1b
     before compilation.
     Added option -M for new style password modes specification.
     (see apg(1) apgd(8)).
-    Added support for IRIX
+    Added support for IRIX.
     (Thanks to Andrew J. Caird <acaird@advance-inc.com>)
 
 apg-1.2.1a2

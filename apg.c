@@ -35,14 +35,21 @@
 #include <strings.h>
 #include <string.h>
 #include <time.h>
+
+#ifdef __NetBSD__
+#include <unistd.h>
+#endif
+
 #define MAX_MODE_LENGTH   5
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
 #endif
 
+#ifndef __NetBSD__
 #include <unistd.h>
-/*#include <crypt.h>*/
+#endif
+
 #ifdef __CYGWIN__
 #include <getopt.h>
 #undef APG_USE_CRYPT
@@ -220,7 +227,7 @@ main (int argc, char *argv[])
 #endif /* CLISERV */
      case 'v': /* print version */
       printf ("APG (Automated Password Generator)");
-      printf ("\nversion 1.2.11");
+      printf ("\nversion 1.2.13");
       printf ("\nCopyright (c) 1999, 2000, 2001 Adel I. Mirzazhanov\n");
       return (0);
      default: /* print help end exit */
