@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -30,14 +30,14 @@
 /*
 ** randpass.h
 */
-#ifndef RANDPASS_H
-#define RANDPASS_H	1
+#ifndef APG_RANDPASS_H
+#define APG_RANDPASS_H	1
 
-#ifndef RND_H
+#ifndef APG_RND_H
 #include "rnd.h"
 #endif
 
-#ifndef OWNTYPES_H
+#ifndef APG_OWN_TYPES_H
 #include "owntypes.h"
 #endif
 

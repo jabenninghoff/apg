@@ -1,0 +1,24 @@
+NAME
+   bfconvert
+
+DESCRIPTION
+   Convert APG Bloom-filter version 1.0.1 to
+   version 1.1.0
+
+BUILD
+   Just type `make' and hit [Enter] at the
+   command prompt.
+
+USAGE
+   bfconvert old_bf_file_name new_bf_file_name
+
+RETURN
+   0 - success
+  -1 - something wrong
+
+NOTE
+   Converted filter will be case sensitive.
+   
+   Conversion to the case insensitive filter
+   is impossible because of the bloom-filter
+   nature.

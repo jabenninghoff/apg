@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,16 @@
 /*
 ** restrict.h
 */
-#ifndef RESTRICT_H
-#define RESTRICT_H	1
+#ifndef APG_RESTRICT_H
+#define APG_RESTRICT_H	1
 
 #include "bloom.h"
 #include "randpass.h"
 #define MAX_DICT_STRING_SIZE	255
 int check_pass(char * pass, char *dict);
 int bloom_check_pass (char *word, char *filter);
+int paranoid_bloom_check_pass (char * password, char *filter, USHORT s_len);
 int filter_check_pass(const char * word, unsigned int cond);
 int set_exclude_list(const char * char_string);
 
-#endif /* RESTRICT_H */
+#endif /* APG_RESTRICT_H */

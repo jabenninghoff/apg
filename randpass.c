@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#if !defined(WIN32) && !defined(_WIN32) && !defined(__WIN32) && !defined(__WIN32__)
 #include <pwd.h>
+#endif
 #include <unistd.h>
 #include "randpass.h"
 

@@ -2,17 +2,17 @@
 .\" Licensed under BSD-like License.
 .\" Created by Adel I. Mirzazhanov
 .\"
-.TH APGBFM 1 "2002 Jun 12" "Automated Password Generator" "User Manual"
+.TH APGBFM 1 "2003 Jun 19" "Automated Password Generator" "User Manual"
 .SH NAME
 apgbfm
 \- APG Bloom filter management program
 
 .SH SYNOPSIS
 .B apgbfm
-\fB-f\fP \fIfilter\fP \fB-n\fP \fBnumofwords\fP [\fB-q\fP]
+\fB-f\fP \fIfilter\fP \fB-n\fP \fBnumofwords\fP [\fB-q\fP] [\fB-s\fP]
 .br
 .B apgbfm
-\fB-f\fP \fIfilter\fP \fB-d\fP \fIdictfile\fP [\fB-q\fP]
+\fB-f\fP \fIfilter\fP \fB-d\fP \fIdictfile\fP [\fB-q\fP] [\fB-s\fP]
 .br
 .B apgbfm
 \fB-f\fP \fIfilter\fP \fB-a\fP \fBword\fP [\fB-q\fP]
@@ -25,6 +25,9 @@ apgbfm
 .br
 .B apgbfm
 \fB-f\fP \fIfilter\fP \fB-C\fP \fIdictfile\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-i\fP \fIfilter\fP
 .br
 .B apgbfm
 [\fB-v\fP] [\fB-h\fP]
@@ -57,7 +60,7 @@ bits in filter file are set to 1 then it suppose that word exists in dicionary.
 .PP
 .TP
 .B WARNING !!!
-This is the first release of \fBapgbfm\fP and filter file format can be changed
+Filter file format can be changed
 in the future. I'll try to make file formats compatible but i can not guaranty this.
 .TP
 .B WARNING !!!
@@ -66,6 +69,9 @@ in the future. I'll try to make file formats compatible but i can not guaranty t
 .TP
 .B -f \fIfilter\fP
 use \fIfilter\fP as the name for Bloom filter filename.
+.TP
+.B -i \fIfilter\fP
+print information about \fIfilter\fP.
 .TP
 .B -n numofwords
 create new empty filter for \fBnumofwords\fP number of words. Useful when you
@@ -97,6 +103,9 @@ check every word from \fIdictfile\fP for appearance in the filter.
 .TP
 .B -q
 quiet mode.
+.TP
+.B -s
+create new filter in case-insensitive mode.
 .TP
 .B -v
 print version information.

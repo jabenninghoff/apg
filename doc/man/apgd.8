@@ -2,7 +2,7 @@
 .\" Licensed under BSD-like License.
 .\" Created by Adel I. Mirzazhanov
 .\"
-.TH APGD 8 "2002 Jun 11" "Automated Password Generator" "User Manual"
+.TH APGD 8 "2003 Jun 19" "Automated Password Generator" "User Manual"
 .SH NAME
 apgd
 \- server that generates several random passwords
@@ -11,7 +11,8 @@ apgd
 .B apgd
 [\fB-a algorithm\fP] [\fB-M mode\fP] [\fB-E char_string\fP]
 [\fB-n num_of_pass\fP] [\fB-m min_pass_len\fP] [\fB-x max_pass_len\fP]
-[\fB-r\fP \fIdictfile\fP] [\fB-b\fP \fIfilter_file\fP]
+[\fB-r\fP \fIdictfile\fP] [\fB-b\fP \fIfilter_file\fP] [\fB-p min_substr_len\fP]
+[\fB-t\fP] [\fB-l\fP]
 .PP
 .SH DESCRIPTION
 .B apgd
@@ -164,9 +165,6 @@ Usage of L, M, N, C will slow down password generation process.
 .B Examples:
 .br
 \fB-M sncl\fP or \fB-M SNCL\fP or \fB-M Cn\fP
-.PP
-\fB-M mode\fP is the new style password generation mode definition. Old style
-options(-C, -N, -S, -L, -R) are not supported any more.
 .RE
 .TP
 .B -a algorithm
@@ -220,6 +218,14 @@ check generated passwords for their appearance in
 \fIfilter_file\fP. \fIfilter_file\fP should be created with \fBapgbfm\fP(1)
 utility.
 .TP
+.B -p min_substr_len
+this option tells \fBapg\fP(1) to check every substring of the generated
+password for appearance in \fIfilter_file\fP. If any of such substrings would
+be found in the \fIfilter_file\fP then generated password would be rejected
+and apg(1) will generate another one.
+\fBmin_substr_len\fP is specifies minimum substring length to check.
+This option is active only if \fB-b\fP option is defined.
+.TP
 .B -n num_of_pass
 generate 
 .B num_of_pass
@@ -229,15 +235,25 @@ number of passwords. Default is 6.
 generate password with minimum length 
 .B min_pass_len.
 If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default minimum password length is 6.
+Default minimum password length is 8.
 .TP
 .B -x max_pass_len
 generate password with maximum length 
 .B max_pass_len
 If \fBmin_pass_len > max_pass_len\fP then \fBmax_pass_len = min_pass_len\fP.
-Default maximum password length is 8.
+Default maximum password length is 10.
+.TP
+.B -l
+spell genetated passwords. Useful when you want to read generated password by telephone.
+.RS
+.B WARNING:
+Think twice before read your password by phone.
+.RE
+.TP
+.B -t
+print pronunciation for generated pronounceable password
 .SH "DEFAULT OPTIONS"
-\fBapgd -a 0 -M ncl -n 6 -x 8 -m 6\fP (new style)
+\fBapgd -a 0 -M sncl -n 6 -x 10 -m 8\fP (new style)
 .SH "EXIT CODE"
 On successful completion of its task,
 .B apgd
