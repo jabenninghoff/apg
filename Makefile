@@ -11,7 +11,8 @@ FLAGS = -Wall
 ##################################################################
 # Libraries
 #
-# You should comment the line below for OpenBSD 2.8 and above
+# You should comment the line below ('LIBS= -lcrypt')for QNX RTP
+# 6.1.0, OpenBSD 2.8 and above, WIN32 (+MinGW)
 LIBS = -lcrypt
 LIBM = -lm
 # Use lines below for cygwin
@@ -24,6 +25,7 @@ LIBM = -lm
 # DO NOT EDIT THE LINE BELOW !!!
 CRYPTED_PASS = APG_DONOTUSE_CRYPT
 # Coment this if you do not want to use crypted passwords output
+# or trying to build programm for win32
 CRYPTED_PASS = APG_USE_CRYPT
 
 ##################################################################
@@ -65,6 +67,12 @@ APGD_MAN_DIR = /man/man8
 # Uncoment line below for Solaris
 #CS_LIBS = -lnsl -lsocket
 
+####################################################################
+# QNX RTP 6.1.0
+#
+# Uncoment line below for QNX RTP 6.1.0
+#CS_LIBS = -lsocket
+
 # ====== YOU DO NOT NEED TO MODIFY ANYTHING BELOW THIS LINE ======
 # Find group ID for user root
 FIND_GROUP = `grep '^root:' /etc/passwd | awk -F: '{ print $$4 }'`
@@ -72,18 +80,18 @@ FIND_GROUP = `grep '^root:' /etc/passwd | awk -F: '{ print $$4 }'`
 PROGNAME = apg
 CS_PROGNAME = apgd
 BFM_PROGNAME = apgbfm
-BFM_SOURCES = apgbfm.c bloom.c sha/sha.c errors.c getopt.c
+BFM_SOURCES = apgbfm.c bloom.c sha/sha.c errors.c getopt.c convert.c
 SOURCES = bloom.c ./sha/sha.c ./cast/cast.c rnd.c pronpass.c \
-randpass.c restrict.c errors.c apg.c getopt.c
+randpass.c restrict.c errors.c apg.c getopt.c convert.c
 HEADERS = owntypes.h pronpass.h randpass.h restrict.h errs.h rnd.h \
-./cast/cast.h ./cast/cast_sboxes.h getopt.h
+./cast/cast.h ./cast/cast_sboxes.h getopt.h convert.h
 OBJECTS = rnd.o ./cast/cast.o pronpass.o randpass.o restrict.o apg.o errors.o
+
+standalone: apg apgbfm
 
 all: cliserv standalone
 
 cliserv: apgd apgbfm 
-
-standalone: apg apgbfm
 
 cygwin: standalone
 
@@ -94,7 +102,7 @@ apgd:
 	${CC} ${FLAGS} -DCLISERV -D${USE_SHA} -o ${CS_PROGNAME} ${SOURCES} ${CS_LIBS} ${LIBM}
 
 apgbfm:
-	${CC} ${FLAGS} -o ${BFM_PROGNAME} ${BFM_SOURCES} ${LIBM}
+	${CC} ${FLAGS} -DAPGBFM -o ${BFM_PROGNAME} ${BFM_SOURCES} ${LIBM}
 
 strip:
 	strip ${PROGNAME}
@@ -136,4 +144,4 @@ fi
 fi
 
 clean:
-	rm -f ${CS_PROGNAME} ${PROGNAME} ${BFM_PROGNAME} ${OBJECTS} core*
+	rm -f ${CS_PROGNAME} ${PROGNAME} ${BFM_PROGNAME} ${OBJECTS} *core*

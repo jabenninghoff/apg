@@ -1,3 +1,16 @@
+apg-2.2.0
+    Added polish translation for APG PHP frontend.
+    Added option -p (see apg(1) apgd(8)).
+    Added option -t (see apg(1) apgd(8)).
+    Added option -l (see apg(1)).
+    Changed format of the bloom-filter file. Added
+    converter utility to convert old format to the
+    new one (bfconvert).
+    Added option -i (see apgbfm(1)).
+    Fixed some bugs.
+    Some compatibility changes.
+    Changed default apg options.
+
 apg-2.1.0
     Some code cleanup.
 

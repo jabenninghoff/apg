@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@ struct sym smbl[94] =
  {'m', S_SL}, {'n', S_SL}, {'o', S_SL}, {'p', S_SL}, {'q', S_SL}, {'r', S_SL},
  {'s', S_SL}, {'t', S_SL}, {'u', S_SL}, {'v', S_SL}, {'w', S_SL}, {'x', S_SL},
  {'y', S_SL}, {'z', S_SL}, {'A', S_CL}, {'B', S_CL}, {'C', S_CL}, {'D', S_CL},
- {'E', S_CL}, {'F', S_CL}, {'G', S_CL}, {'H', S_CL}, {'I', S_CL}, {'I', S_CL},
- {'K', S_CL}, {'K', S_CL}, {'M', S_CL}, {'N', S_CL}, {'O', S_CL}, {'P', S_CL},
+ {'E', S_CL}, {'F', S_CL}, {'G', S_CL}, {'H', S_CL}, {'I', S_CL}, {'J', S_CL},
+ {'K', S_CL}, {'L', S_CL}, {'M', S_CL}, {'N', S_CL}, {'O', S_CL}, {'P', S_CL},
  {'Q', S_CL}, {'R', S_CL}, {'S', S_CL}, {'T', S_CL}, {'U', S_CL}, {'V', S_CL},
  {'W', S_CL}, {'X', S_CL}, {'Y', S_CL}, {'Z', S_CL}, {'1', S_NB}, {'2', S_NB},
  {'3', S_NB}, {'4', S_NB}, {'5', S_NB}, {'6', S_NB}, {'7', S_NB}, {'8', S_NB},

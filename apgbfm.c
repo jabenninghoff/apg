@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2001, 2002
+** Copyright (c) 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 #include "getopt.h"
 
 
-#define VERSION    "2.1.0"
+#define VERSION    "2.2.0"
 
 
 #define FOUND "FOUND"
@@ -48,35 +48,38 @@
 int main (int argc, char *argv[]);
 void print_help(void);
 void checkopt(char *opt);
+void print_filter_info(char * filter);
 
 int
 main (int argc, char *argv[])
 {
  int option = 0;
  
- char *dictfile;        /* dictionary filename                 */
- FILE *f_dictfile;      /* dictionary file descriptor          */
+ char *dictfile;         /* dictionary filename                 */
+ FILE *f_dictfile;       /* dictionary file descriptor          */
 
- char *filter;          /* filter file name                    */
- FILE *f_filter;        /* filter file descriptor              */
+ char *filter;           /* filter file name                    */
+ FILE *f_filter;         /* filter file descriptor              */
 
- char *word;            /* word to add or check                */
- char *tmp;             /* just tmp char pointer               */
- h_val wc = 0L;         /* amount of words to build dictionaty */
- h_val filter_size =0L; /* filter size in bits                 */
- int dummy_test = 0;    /* variable to make dummy test for     */
-                        /* options correctness                 */
- h_val i = 0L;          /* cointer                             */
+ char *word;             /* word to add or check                */
+ char *tmp;              /* just tmp char pointer               */
+ h_val wc = 0L;          /* amount of words to build dictionaty */
+ h_val filter_size =0L;  /* filter size in bits                 */
+ int dummy_test = 0;     /* variable to make dummy test for     */
+                         /* options correctness                 */
+ h_val i = 0L;           /* counter                             */
+ f_mode flt_mode = 0x00; /* filter mode                         */
 
  /* flags */
- flag add_word_flag      = FALSE; /* -a */
- flag add_file_flag      = FALSE; /* -A */
- flag check_word_flag    = FALSE; /* -c */
- flag check_file_flag    = FALSE; /* -C */
- flag new_flag           = FALSE; /* -n */
- flag new_from_dict_flag = FALSE; /* -d */
- flag filter_flag        = FALSE; /* -f */
- flag silent_flag        = FALSE; /* -s */
+ flag add_word_flag         = FALSE; /* -a */
+ flag add_file_flag         = FALSE; /* -A */
+ flag check_word_flag       = FALSE; /* -c */
+ flag check_file_flag       = FALSE; /* -C */
+ flag new_flag              = FALSE; /* -n */
+ flag new_from_dict_flag    = FALSE; /* -d */
+ flag filter_flag           = FALSE; /* -f */
+ flag silent_flag           = FALSE; /* -q */
+ flag case_insensitive_flag = FALSE; /* -q */
  /* end of flags section */
 
  /* Analize options */
@@ -86,7 +89,7 @@ main (int argc, char *argv[])
      exit(-1);
     }
  
- while ((option = apg_getopt (argc, argv, "a:A:c:C:n:d:f:hvq")) != -1)
+ while ((option = apg_getopt (argc, argv, "a:A:c:C:n:d:f:i:hvqs")) != -1)
    {
     switch(option)
       {
@@ -132,10 +135,17 @@ main (int argc, char *argv[])
        case 'v':
          printf ("APG Bloom filter management programm");
 	 printf ("\nversion %s", VERSION);
-	 printf ("\nCopyright (c) 2001, 2002 Adel I. Mirzazhanov\n");
+	 printf ("\nCopyright (c) 2001, 2002, 2003 Adel I. Mirzazhanov\n");
+	 return (0);
+       case 'i':
+	 print_filter_info(apg_optarg);
 	 return (0);
        case 'q':
          silent_flag = TRUE;
+	 break;
+       case 's':
+         flt_mode = flt_mode | BF_CASE_INSENSITIVE;
+         case_insensitive_flag = TRUE;
 	 break;
        default:
          print_help();
@@ -151,8 +161,9 @@ main (int argc, char *argv[])
      if ( (f_filter = open_filter(filter, "r+")) == NULL)
         err_sys_fatal("open_filter");
      filter_size = get_filtersize(f_filter);
+     flt_mode    = get_filtermode(f_filter);
      if (filter_size == 0) err_sys_fatal("get_filtersize");
-     if ( insert_word (word, f_filter, filter_size) == -1)
+     if ( insert_word (word, f_filter, filter_size, flt_mode) == -1)
 	    err_sys_fatal("insert_word");
      if (silent_flag != TRUE)
         printf ("Word %s added\n",word);
@@ -166,19 +177,15 @@ main (int argc, char *argv[])
      if( (f_filter = open_filter(filter,"r+")) == NULL)
         err_sys_fatal("open_filter");
      filter_size = get_filtersize(f_filter);
+     flt_mode    = get_filtermode(f_filter);
      if (filter_size == 0) err_sys_fatal("get_filtersize");
      while ((fgets(word, MAX_DICT_STRLEN, f_dictfile) != NULL))
         {
          tmp = (char *)strtok (word," \t\n\0");
 	 if( tmp != NULL)
-	  {
 	   word = tmp;
-	  }
-	 else
-	  {
-	   continue;
-	  }
-         if ( insert_word (word, f_filter, filter_size) == -1)
+	 else continue;
+         if ( insert_word (word, f_filter, filter_size, flt_mode) == -1)
 	    err_sys_fatal("insert_word");
 	 i++;
 	 if (silent_flag != TRUE)
@@ -202,8 +209,10 @@ main (int argc, char *argv[])
      if ( (f_filter = open_filter(filter, "r")) == NULL)
         err_sys_fatal("open_filter");
      filter_size = get_filtersize(f_filter);
+     flt_mode    = get_filtermode(f_filter);
+
      if (filter_size == 0) err_sys_fatal("get_filtersize");
-     switch(check_word (word, f_filter, filter_size))
+     switch(check_word (word, f_filter, filter_size, flt_mode))
 	{
 	 case -1:
 	    err_sys_fatal("check_word");
@@ -227,19 +236,16 @@ main (int argc, char *argv[])
      if( (f_filter = open_filter(filter, "r")) == NULL)
         err_sys_fatal("open_filter");
      filter_size = get_filtersize(f_filter);
+     flt_mode    = get_filtermode(f_filter);
+
      if (filter_size == 0) err_sys_fatal("get_filtersize");
      while ((fgets(word, MAX_DICT_STRLEN, f_dictfile) != NULL))
         {
          tmp = (char *)strtok (word," \t\n\0");
 	 if( tmp != NULL)
-	  {
 	   word = tmp;
-	  }
-	 else
-	  {
-	   continue;
-	  }
-         switch(check_word (word, f_filter, filter_size))
+	 else continue;
+         switch(check_word (word, f_filter, filter_size, flt_mode))
 	    {
 	     case -1:
 	        err_sys_fatal("check_word");
@@ -260,8 +266,8 @@ main (int argc, char *argv[])
     }
  if (new_flag == TRUE) /* -n nwords */
     {
-     if ((f_filter = create_filter(filter, wc)) == NULL)
-        err_sys_fatal("create_filter");
+     if ((f_filter = create_filter(filter, wc, flt_mode)) == NULL)
+         err_sys_fatal("create_filter");
      close_filter(f_filter);
      return (0);
     }
@@ -277,7 +283,7 @@ main (int argc, char *argv[])
 	}
      wc = count_words (f_dictfile);
      if (wc == 0) err_sys_fatal("count_words");
-     if( (f_filter = create_filter(filter, wc)) == NULL)
+     if( (f_filter = create_filter(filter, wc, flt_mode)) == NULL)
         err_sys_fatal("create_filter");
      filter_size = get_filtersize(f_filter);
      if (filter_size == 0) err_sys_fatal("get_filtersize");
@@ -292,7 +298,7 @@ main (int argc, char *argv[])
 	  {
 	   continue;
 	  }
-         if ( insert_word (word, f_filter, filter_size) == -1)
+         if ( insert_word (word, f_filter, filter_size, flt_mode) == -1)
 	    err_sys_fatal("insert_word");
 	 i++;
 	 if (silent_flag != TRUE)
@@ -329,6 +335,7 @@ print_help(void)
  printf ("         Copyright (c) 2001 Adel I. Mirzazhanov\n");
  printf ("\napgbfm   -f filter < [-a word] | [-A dictfile] | [-n numofwords] |\n");
  printf ("                     [-c word] | [-C dictfile] | [-d dictfile] > [-s]\n");
+ printf ("apgbfm   -i filter\n");
  printf ("apgbfm   [-v] [-h]\n\n");
  printf ("-a word        add word to filter\n");
  printf ("-A dictfile    add words from dictfile to filter\n");
@@ -338,6 +345,8 @@ print_help(void)
  printf ("-d dictfile    create new filter and add all words from dictfile\n");
  printf ("-f filtername  use filtername as the name for filter\n");
  printf ("-q             quiet mode (do not print dots for -A and -d)\n");
+ printf ("-s             create case insentive filter\n");
+ printf ("-i filter      print filter information\n");
  printf ("-v             print version information\n");
  printf ("-h             print  help (this screen)\n");
 }
@@ -361,4 +370,25 @@ checkopt(char *opt)
      opt[i] != '4' && opt[i] != '5' && opt[i] != '6' && opt[i] != '7' &&
      opt[i] != '8' && opt[i] != '9')
       err_app_fatal ("checkopt", "wrong option format");
+}
+
+/*
+** print_filter_info(char * filter) - print filter information
+** INPUT:
+**   char * - filter file name.
+** OUTPUT:
+**   none.
+** NOTES:
+**   none.
+*/
+void
+print_filter_info(char * filter)
+{
+FILE * f_filter;
+
+if ( (f_filter = open_filter(filter, "r")) == NULL)
+   err_sys_fatal("open_filter");
+if (( print_flt_info(f_filter)) == -1)
+   err_sys_fatal("print_flt_info");
+close_filter(f_filter);
 }

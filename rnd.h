@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -27,10 +27,10 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef RND_H
-#define RND_H	1
+#ifndef APG_RND_H
+#define APG_RND_H	1
 
-#ifndef OWN_TYPES_H
+#ifndef APG_OWN_TYPES_H
 #include "owntypes.h"
 #endif /* OWN_TYPES_H */
 
@@ -52,4 +52,4 @@ UINT32 x917cast_rnd (void);
 UINT32 x917sha1_rnd (void);
 #endif /* APG_USE_SHA*/
 
-#endif /* RND_H */
+#endif /* APG_RND_H */

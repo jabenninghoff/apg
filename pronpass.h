@@ -5,7 +5,7 @@
 */
 
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -34,16 +34,16 @@
 */
 
 
-#ifndef PRONPASS_H
-#define PRONPASS_H	1
+#ifndef APG_PRONPASS_H
+#define APG_PRONPASS_H	1
 
-#ifndef OWN_TYPES_H
+#ifndef APG_OWN_TYPES_H
 #include "owntypes.h"
-#endif /* OWN_TYPES_H */
+#endif /* APG_OWN_TYPES_H */
 
-#ifndef RND_H
+#ifndef APG_RND_H
 #include "rnd.h"
-#endif /* RND_H */
+#endif /* APG_RND_H */
 
 #define RULE_SIZE             (sizeof(rules)/sizeof(struct unit))
 #define ALLOWED(flag)         (digram[units_in_syllable[current_unit -1]][unit] & (flag))
@@ -80,10 +80,5 @@ int gen_word (char *word, char *hyphenated_word, USHORT pwlen,
               unsigned int pass_mode);
 char   	*gen_syllable(char *syllable, USHORT pwlen, USHORT *units_in_syllable,
                       USHORT *syllable_length);
-void capitalize (char *syllable);
-void numerize (char *syllable);
-void specialize (char *syllable);
-void r_specialize (char *syllable);
-void symb2name (char *syllable, char * h_syllable);
 
-#endif /* PRONPASS_H */
+#endif /* APG_PRONPASS_H */

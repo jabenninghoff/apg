@@ -1,5 +1,5 @@
 /*
- * Modified by Adel I. Mirzazhanov 2002
+ * Modified by Adel I. Mirzazhanov 2002, 2003
  * getopt - get option letter from argv
  *
  * This is a version of the public domain getopt() implementation by

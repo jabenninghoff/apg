@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2001, 2002
+** Copyright (c) 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,9 @@
 **   create_filter  - create initial(empty) filter file 
 **   open_filter    - open APG Bloom filter file
 **   get_filtersize - get APG Bloom filter size
+**   get_filtermode - get APG Bloom filter mode
 **   count_words    - count words in plain dictionary file
+**   print_flt_info - print filter info
 **=============================================================
 **   hash2bit       - generates 5 values (should be 5 values of independent
 **                    hash functions) from input string.
@@ -46,10 +48,58 @@
 */
 
 #include "bloom.h"
+#include "convert.h"
+
+#define FSIZE_BIT(word_count) ((unsigned long int)(5.0/(1.0-pow( 0.84151068, 1.0/((double)word_count)))))
+#define FSIZE_BYTE(word_count) ((((unsigned long int)(5.0/(1.0-pow( 0.84151068, 1.0/((double)word_count)))))/8)+1)
 
 h_val * hash2bit(char * word, h_val *b);
 int getbit(FILE * f, h_val bitnum);
 int putbit(FILE * f, h_val bitnum);
+
+#ifdef APGBFM
+/*
+** print_flt_info - print filter information
+** INPUT:
+**    FILE * filter - filter file descriptor
+** OUTPUT:
+**    int
+**      0 - everything OK
+**     -1 - something wrong
+*/
+int
+print_flt_info(FILE * filter)
+{
+ struct apg_bf_hdr bf_hdr;
+ int i = 0;
+
+ if (fseek (filter, 0, SEEK_SET) == -1)
+    return(-1);
+ if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, filter) != 1)
+    if (ferror (filter) != 0)
+       return(-1);
+ printf ("**************************************\n");
+ printf ("** APGBFM: Bloom-filter information **\n");
+ printf ("**************************************\n");
+ printf ("Filter ID     : ");
+ for (i=0; i < sizeof(bf_hdr.id); i++)
+   printf ("%c", bf_hdr.id[i]);
+ printf ("\n");
+ printf ("Filter Version: ");
+ printf ("%c.", bf_hdr.version[0]);
+ printf ("%c.", bf_hdr.version[1]);
+ printf ("%c", bf_hdr.version[2]);
+ printf ("\n");
+ printf ("Filter size   : %lu bits\n", (unsigned long int)bf_hdr.fs);
+ printf ("Filter mode   : ");
+ if (bf_hdr.mode == 0x00) printf ("PLAIN\n");
+ if (bf_hdr.mode == 0x01) printf ("CASE_INSENSITIVE\n");
+ printf ("**************************************\n");
+ if (fseek (filter, 0, SEEK_SET) == -1)
+    return(-1);
+ return(0);
+}
+#endif /* APGBFM */
 
 /*
 ** insert_word   - insert word in the filter file
@@ -57,16 +107,31 @@ int putbit(FILE * f, h_val bitnum);
 **    char *word        - word to incert in the filter
 **    FILE *file        - filter file descriptor
 **    h_val filter_size - filter size in bits
+**    f_mode mode       - filter mode
 ** OUTPUT:
 **    int
 **      0 - everything OK
 **     -1 - something wrong
 */
 int
-insert_word(char *word, FILE *file, h_val filter_size)
+insert_word(char *word, FILE *file, h_val filter_size, f_mode mode)
 {
  h_val h[H_NUM];
  int i = 0;
+
+#ifdef APG_DEBUG
+ fprintf (stdout, "DEBUG> insert_word: word to insert: %s\n", word);
+ fflush (stdout);
+#endif /* APG_DEBUG */
+
+ if ((mode & BF_CASE_INSENSITIVE) > 0)
+  {
+   decapitalize(word);
+#ifdef APG_DEBUG
+   fprintf (stdout, "DEBUG> insert_word: decapitalized word: %s\n", word);
+   fflush (stdout);
+#endif /* APG_DEBUG */
+  }
 
  hash2bit (word, &h[0]);
  for(i = 0; i < H_NUM; i++)
@@ -81,6 +146,7 @@ insert_word(char *word, FILE *file, h_val filter_size)
 **    char *word        - word to check
 **    FILE *file        - filter file descriptor
 **    h_val filter_size - filter size in bits
+**    f_mode            - filter mode
 ** OUTPUT:
 **    int
 **      0 - word is not in dictionary
@@ -88,12 +154,33 @@ insert_word(char *word, FILE *file, h_val filter_size)
 **     -1 - something wrong
 */
 int
-check_word(char *word, FILE *file,  h_val filter_size)
+check_word(char *word, FILE *file,  h_val filter_size, f_mode mode)
 {
  h_val h[H_NUM];
  int i = 0;
+ char * tmp_word;
+ 
+ if ((tmp_word = (char *) calloc(1,MAX_DICT_STRLEN)) == NULL)
+    return(-1);
+ (void)memcpy ((void *) tmp_word, (void *) word, strlen(word));
 
- hash2bit (word, &h[0]);
+#ifdef APG_DEBUG
+ fprintf (stdout, "DEBUG> check_word: word to check: %s\n", word);
+ fflush (stdout);
+#endif /* APG_DEBUG */
+ if ((mode & BF_CASE_INSENSITIVE) > 0)
+  {
+   decapitalize(tmp_word);
+#ifdef APG_DEBUG
+   fprintf (stdout, "DEBUG> check_word: decapitalized word: %s\n", tmp_word);
+   fflush (stdout);
+#endif /* APG_DEBUG */
+  }
+
+ hash2bit (tmp_word, &h[0]);
+
+ free ((void *)tmp_word);
+
  for(i = 0; i < H_NUM; i++)
   {
    switch(getbit(file, h[i] % filter_size))
@@ -125,16 +212,23 @@ FILE *
 open_filter(char * f_name, const char *mode)
 {
  FILE *f;
+ char etalon_bf_id[] = APGBF_ID;
+ char etalon_bf_ver[] = APGBF_VERSION;
  struct apg_bf_hdr bf_hdr;
+ 
  if ((f = fopen (f_name, mode)) == NULL)
    return(NULL);
- if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) < APGBFHDRSIZE)
+ if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) != 1)
     if (ferror (f) != 0)
        return(NULL);
- if ((bf_hdr.id[0] != 'A') || (bf_hdr.id[1] != 'P') ||
-     (bf_hdr.id[2] != 'G') || (bf_hdr.id[3] != 'B') ||
-     (bf_hdr.id[4] != 'F') || (bf_hdr.id[5] != '1') ||
-     (bf_hdr.id[6] != '0') || (bf_hdr.id[7] != '1') ) return (NULL);
+ if ((bf_hdr.id[0] != etalon_bf_id[0]) || (bf_hdr.id[1] != etalon_bf_id[1]) ||
+     (bf_hdr.id[2] != etalon_bf_id[2]) || (bf_hdr.id[3] != etalon_bf_id[3]) ||
+     (bf_hdr.id[4] != etalon_bf_id[4]) )
+        return (NULL);
+ if ((bf_hdr.version[0] != etalon_bf_ver[0]) ||
+     (bf_hdr.version[1] != etalon_bf_ver[1]) ||
+     (bf_hdr.version[2] != etalon_bf_ver[2]) )
+        return (NULL);
  else
   {
    if (fseek (f, 0, SEEK_SET) == -1)
@@ -169,13 +263,37 @@ h_val
 get_filtersize(FILE * f)
 {
  struct apg_bf_hdr bf_hdr;
- if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) < APGBFHDRSIZE)
+ if (fseek (f, 0, SEEK_SET) == -1)
+    return(0);
+ if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) != 1)
     if (ferror (f) != 0)
        return(0);
  if (fseek (f, 0, SEEK_SET) == -1)
     return(0);
  return( (h_val)bf_hdr.fs);
 } 
+
+/*
+** get_filtermode - get APG Bloom filter mode
+** INPUT:
+**    FILE *f - filter file descriptor
+** OUTPUT:
+**    f_mode - APG Bloom filter mode.
+**    0      - something wrong 
+*/
+f_mode
+get_filtermode(FILE *f)
+{
+ struct apg_bf_hdr bf_hdr;
+ if (fseek (f, 0, SEEK_SET) == -1)
+    return(0);
+ if (fread ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) != 1)
+    if (ferror (f) != 0)
+       return(0);
+ if (fseek (f, 0, SEEK_SET) == -1)
+    return(0);
+ return( (f_mode)bf_hdr.mode);
+}
 
 /*
 ** create_filter - create initial(empty) filter file 
@@ -203,27 +321,33 @@ get_filtersize(FILE * f)
 **       1 - 0.84151068
 */
 FILE *
-create_filter(char * f_name, unsigned long int n_words) 
+create_filter(char * f_name, unsigned long int n_words, f_mode mode) 
 {
  FILE *f;
  char zero = 0x00;
  long int i = 0L;
+ char etalon_bf_id[] = APGBF_ID;
+ char etalon_bf_ver[] = APGBF_VERSION;
  struct apg_bf_hdr bf_hdr;
 
- bf_hdr.id[0] = 'A';
- bf_hdr.id[1] = 'P';
- bf_hdr.id[2] = 'G';
- bf_hdr.id[3] = 'B';
- bf_hdr.id[4] = 'F';
- bf_hdr.id[5] = '1';
- bf_hdr.id[6] = '0';
- bf_hdr.id[7] = '1';
+ bf_hdr.id[0] = etalon_bf_id[0];
+ bf_hdr.id[1] = etalon_bf_id[1];
+ bf_hdr.id[2] = etalon_bf_id[2];
+ bf_hdr.id[3] = etalon_bf_id[3];
+ bf_hdr.id[4] = etalon_bf_id[4];
+ 
+ bf_hdr.version[0] = etalon_bf_ver[0];
+ bf_hdr.version[1] = etalon_bf_ver[1];
+ bf_hdr.version[2] = etalon_bf_ver[2];
+
  bf_hdr.fs = FSIZE_BIT(n_words);
+ 
+ bf_hdr.mode = mode;
 
  if ((f = fopen (f_name, "w+")) == NULL)
    return(NULL);
 
- if (fwrite ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) < APGBFHDRSIZE)
+ if (fwrite ( (void *)&bf_hdr, APGBFHDRSIZE, 1, f) != 1)
     if (ferror (f) != 0)
        return(NULL);
 

@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2002, 2003
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,17 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef APG_GETOPT_H
-#define APG_GETOPT_H	1
+#ifndef APG_CONVERT_H
+#define APG_CONVERT_H	1
 
-extern char *	apg_optarg;		/* global argument pointer */
-extern int	apg_optind;		/* global argv index */
+void decapitalize (char *word);
 
-extern int apg_getopt(int argc,char *argv[],const char *optstring);
+#ifndef APGBFM
+void capitalize (char *syllable);
+void numerize (char *syllable);
+void specialize (char *syllable);
+void symb2name(char * syllable, char * h_syllable);
+char* spell_word(char * word, char * spelled_word);
+#endif /* APGBFM */
 
-#endif /* APG_GETOPT_H */
+#endif /* APG_CONVERT_H */

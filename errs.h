@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001, 2002
+** Copyright (c) 1999, 2000, 2001, 2002, 2003
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,8 @@
 ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ERRS_H
-#define ERRS_H	1
+#ifndef APG_ERRS_H
+#define APG_ERRS_H	1
 
 #include <errno.h>
 
@@ -37,4 +37,4 @@ extern void err_sys_fatal(const char *string);
 extern void err_app(const char *string, const char *err);
 extern void err_app_fatal(const char *string, const char *err);
 
-#endif /* ERRS_H */
+#endif /* APG_ERRS_H */
