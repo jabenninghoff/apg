@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "errs.h"
 
 #ifdef CLISERV
@@ -37,7 +38,14 @@
 #endif
 
 /*
-** routine that handles non-fatal system errors like calloc, open, etc.
+** err_sys() - routine that handles non-fatal system errors
+** like calloc, open, etc.
+** INPUT:
+**   const char * - error name.
+** OUTPUT:
+**   prints error to stderr.
+** NOTES:
+**   none.
 */
 void
 err_sys(const char *string)
@@ -51,7 +59,14 @@ err_sys(const char *string)
 }
 
 /*
-** routine that handles fatal system errors like calloc, open, etc.
+** err_sus_fatal() - routine that handles fatal system errors
+** like calloc, open, etc.
+** INPUT:
+**   const char * - error name.
+** OUTPUT:
+**   prints error to stderr and then exit.
+** NOTES:
+**   none.
 */
 void
 err_sys_fatal(const char *string)
@@ -68,7 +83,14 @@ err_sys_fatal(const char *string)
 }
 
 /*
-** routine that handles non-fatal application errors.
+** err_app() - routine that handles non-fatal application errors.
+** INPUT:
+**   const char * - error name.
+**   const char * - error description.
+** OUTPUT:
+**   prints error to stderr.
+** NOTES:
+**   none.
 */
 void
 err_app(const char *string, const char * err)
@@ -83,7 +105,14 @@ err_app(const char *string, const char * err)
 }
 
 /*
-** routine that handles fatal application errors.
+** err_app_fatal() - routine that handles fatal application errors.
+** INPUT:
+**   const char * - error name.
+**   const char * - error description.
+** OUTPUT:
+**   prints error to stderr and then exit.
+** NOTES:
+**   none.
 */
 void
 err_app_fatal(const char *string, const char *err)

@@ -1,0 +1,123 @@
+.\" Man page for apgbfm.
+.\" Licensed under BSD-like License.
+.\" Created by Adel I. Mirzazhanov
+.\"
+.TH APGBFM 1 "2002 Jun 12" "Automated Password Generator" "User Manual"
+.SH NAME
+apgbfm
+\- APG Bloom filter management program
+
+.SH SYNOPSIS
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-n\fP \fBnumofwords\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-d\fP \fIdictfile\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-a\fP \fBword\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-A\fP \fIdictfile\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-c\fP \fBword\fP [\fB-q\fP]
+.br
+.B apgbfm
+\fB-f\fP \fIfilter\fP \fB-C\fP \fIdictfile\fP [\fB-q\fP]
+.br
+.B apgbfm
+[\fB-v\fP] [\fB-h\fP]
+.PP
+.SH DESCRIPTION
+.B apgbfm
+is used to manage Bloom filter that is used to restrict password generation
+in \fBAPG\fP pasword generation software. Usage of the Bloom filter allows to speed
+up password check for large dictionaries and has some other benefits.
+.PP
+The idea to use Bloom filter for that purpose is came from the description of
+the \fBOPUS\fP project \fBOPUS: Preventing Weak Password Choices\fP
+\fIPurdue Technical Report CSD-TR 92-028\fP writen by \fIEugene H. Spafford\fP.
+.PP
+You can obtain this article from:
+.br
+\fIhttp://www.cerias.purdue.edu/homes/spaf/tech-reps/9128.ps\fP
+.br
+It has very nice description of Bloom filter and it's advantages for password
+checking systems.
+.PP
+In simple words, \fBapgbfm\fP generates \fIn\fP hash values for every word and
+sets corresponding bits in filter file to 1. To check the word \fBapgbfm\fP
+generates the same hash functions for that word and if all \fIn\fP corresponding
+bits in filter file are set to 1 then it suppose that word exists in dicionary.
+\fBapgbfm\fP uses \fBSHA-1\fP as a hash function.
+.PP
+\fBapgbfm\fP can be used as standalone utility, not only with \fBapg\fP, or
+\fBapgd\fP.
+.PP
+.TP
+.B WARNING !!!
+This is the first release of \fBapgbfm\fP and filter file format can be changed
+in the future. I'll try to make file formats compatible but i can not guaranty this.
+.TP
+.B WARNING !!!
+\fBapgbfm\fP may slow down your computer during filter creation.
+.SH "OPTIONS"
+.TP
+.B -f \fIfilter\fP
+use \fIfilter\fP as the name for Bloom filter filename.
+.TP
+.B -n numofwords
+create new empty filter for \fBnumofwords\fP number of words. Useful when you
+want to fill filter dynamicaly.
+.TP
+.B -d \fIdictfile\fP
+create new filter from \fIdictfile\fP. It may take a lot of time to
+generate filter from a big dictionary. In that dictionary you may place
+words (one per line) that should not appear as generated passwords.
+For example: user names common words, etc. You even can use one of the
+dictionaries that come with \fIdictionary password crackers\fP.
+This check is case sensitive. For example, if you want to reject word 'root',
+you should insert in \fIdictfile\fP words: root, Root, RoOt, ... , ROOT.
+To indicate that program is working \fBapgbfm\fP prints dot for every 100
+words added in dictionary.
+.TP
+.B -a word
+add \fBword\fP to the filter.
+.TP
+.B -A \fIdictfile\fP
+add all words from \fIdictfile\fP to the filter. To indicate that program is working
+\fBapgbfm\fP prints dot for every 100 words added in dictionary.
+.TP
+.B -c word
+check \fBword\fP for appearance in the filter.
+.TP
+.B -C \fIdictfile\fP
+check every word from \fIdictfile\fP for appearance in the filter.
+.TP
+.B -q
+quiet mode.
+.TP
+.B -v
+print version information.
+.TP
+.B -h
+print help information.
+.SH "EXIT CODE"
+On successful completion of its task,
+.B apgbfm
+will complete with exit code 0.  An exit code of -1 indicates an error
+occurred.  Textual errors are written to the standard error stream.
+.SH "FILES"
+.B None.
+.SH "BUGS"
+.B None.
+If you've found one, please send bug description to the author.
+.PP
+This man page is Alpha too.
+.SH "SEE ALSO"
+\fBapgd\fP(8), \fBapg\fP(1)
+.SH "AUTHOR"
+Adel I. Mirzazhanov, <a-del@iname.com>
+.br
+Project home page: http://www.adel.nursat.kz/apg/

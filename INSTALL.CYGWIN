@@ -5,13 +5,16 @@ Generaly there are 2 types of installation:
 (2) client-server
 but only standalone installation implemented for CYGWIN yet.
 
+APGD(server) works too, but it has some bugs and i could
+not recommend to use it.
+
 The instruction below IS FOR STANDALONE INSTALLATION ONLY
 
 The simplest way to install this package is:
 1. untar the distribution and cd to the top:
 
-    % gzip -d -c apg-1.X.XX.tar.gz | tar xf -
-    % cd apg-1.X.XX
+    % gzip -d -c apg-2.X.XX.tar.gz | tar xf -
+    % cd apg-2.X.XX
 
 If you are reading this file, you probably have already done this!
 

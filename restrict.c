@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -34,12 +34,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "restrict.h"
-
+extern struct sym smbl[94];
 /*
-** Routine that checks if password exist in dictionary
-** RETURN -1 - error 
-**         1 - password exist in dictionary
-**         0 - password does not exist in dictionary 
+** check_pass() - routine that checks if password exist in dictionary
+** INPUT:
+**   char * - password to check.
+**   char * - dictionary filename.
+** OUTPUT:
+**   int
+**    -1 - error 
+**     1 - password exist in dictionary
+**     0 - password does not exist in dictionary
+** NOTES:
+**   none.
 */
 int
 check_pass(char *pass, char *dict)
@@ -58,9 +65,120 @@ check_pass(char *pass, char *dict)
   {
    string = strtok (string," \t\n\0");
    if(strlen(string) != strlen(pass)) continue;
-   else if (strncmp(string, pass, strlen(pass)) == 0) return (1);
+   else if (strncmp(string, pass, strlen(pass)) == 0)
+    {
+     free ( (void *)string);
+     fclose (dct);
+     return (1);
+    }
   }
  free ( (void *)string);
  fclose (dct);
  return (0); 
+}
+
+/*
+** bloom_check_pass() - routine that checks if password exist in dictionary
+** using Bloom filter.
+** INPUT:
+**   char * - password to check.
+**   char * - bloom-filter filename.
+** OUTPUT:
+**   int
+**    -1 - error 
+**     1 - password exist in dictionary
+**     0 - password does not exist in dictionary
+** NOTES:
+**   none.
+*/
+int
+bloom_check_pass (char *word, char *filter)
+{
+ int ret = 0;
+ FILE *f_filter;
+ h_val filter_size = 0L;
+ if ( (f_filter = open_filter(filter,"r")) == NULL)
+    return(-1);
+ filter_size = get_filtersize(f_filter);
+ ret = check_word (word, f_filter, filter_size);
+ close_filter(f_filter);
+ return(ret);
+}
+
+/*
+** filter_check_pass() - routine that checks password against filter string
+**
+** INPUT:
+**   char * - password to check.
+**   char * - bloom-filter filename.
+** OUTPUT:
+**   int
+**    -1 - error 
+**     1 - password do not pass the filter
+**     0 - password pass the filter
+** NOTES:
+**   none.
+*/
+
+int
+filter_check_pass(const char * word, unsigned int cond)
+{
+ int i = 0;
+ int sl_ret = 0;
+ int cl_ret = 0;
+ int nb_ret = 0;
+ int ss_ret = 0;
+ if ((cond & S_SS) > 0)
+    for (i=0; i < 94; i++)
+       if ((smbl[i].type & S_SS) > 0)
+          if ((strchr(word,smbl[i].ch)) != NULL)
+	     ss_ret = 1;
+ i = 0;
+ if ((cond & S_SL) > 0)
+    for (i=0; i < 94; i++)
+       if ((smbl[i].type & S_SL) > 0)
+          if ((strchr(word,smbl[i].ch)) != NULL)
+	     sl_ret = 1;
+ i = 0;
+ if ((cond & S_CL) > 0)
+    for (i=0; i < 94; i++)
+       if ((smbl[i].type & S_CL) > 0)
+          if ((strchr(word,smbl[i].ch)) != NULL)
+	     cl_ret = 1;
+ i = 0;
+ if ((cond & S_NB) > 0)
+    for (i=0; i < 94; i++)
+       if ((smbl[i].type & S_NB) > 0)
+          if ((strchr(word,smbl[i].ch)) != NULL)
+	     nb_ret = 1;
+ if (((cond & S_SS) > 0) &&(ss_ret != 1)) return (1);
+ if (((cond & S_SL) > 0) &&(sl_ret != 1)) return (1);
+ if (((cond & S_CL) > 0) &&(cl_ret != 1)) return (1);
+ if (((cond & S_NB) > 0) &&(nb_ret != 1)) return (1);
+
+ return(0);
+}
+
+/*
+** set_exclude_list() - set up character list that should
+** be excluded from password generation process
+**
+** INPUT:
+**   char * - string of characters.
+** OUTPUT:
+**   int - return code
+**    0 - OK
+**   -1 - char_string is too long (max 93) 
+** NOTES:
+**   none.
+*/
+int set_exclude_list(const char * char_string)
+{
+ int i = 0;
+ if (strlen(char_string) > 93)
+  return(-1);
+ for(i=0; i < 94; i++)
+  if ((strchr(char_string, smbl[i].ch)) != NULL)
+    smbl[i].type = smbl[i].type | S_RS;
+ return(0);
 }

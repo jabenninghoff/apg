@@ -1,3 +1,71 @@
+apg-2.1.0
+    Some code cleanup.
+
+apg-2.1.0b1
+    Option [-E char_string] now works for pronounceable
+    password generation too (see apg(1), apgd(8)).
+
+apg-2.1.0b0
+    Added new option [-e char_string] that allow to exclude some
+    characters from password generation process.
+    (works only for random password generation yet)
+
+apg-2.1.0a0
+    Added support for /dev/arandom for OpenBSD
+
+apg-2.1.0a0
+    Fixed some typing errors in the man pages
+    System getopt() replaced with own apg_getopt().
+    All calls of bcopy() and bzero() replaced with memcpy() and memset().
+    Changed documentation.
+    PRNG algorithm changed to use PID as an element of initial seed.
+    Redesigned PHP frontend. Added support for German language.
+    Implemented password quality ckeck based on filter. Now you can enforce
+    APG to generate passwords that must contain numbers, special characters etc.
+    Removed support for old style password generation mode definition.
+
+apg-2.0.0final
+    Changed PHP frontend to work with PHP safe-mode.
+    Version numbers of apg, apgd, apgbfm, apgonline changed to 2.0.0final.
+
+apg-2.0.0b1
+    Fixed error that has forced user to set world-write privileges on
+    Bloom-filter file. (Thanks to Mike Robbins <mike.robbins@sweetolive.net>)
+    Fixed PHP frontend to clean-up generated HTML code.
+    (Thanks to Mike Robbins <mike.robbins@sweetolive.net>)
+
+apg-2.0.0b0
+    Some code style fixes.
+    Support for "special" symbol-set usage for password generation
+    in pronounceable mode (S mode).
+    Support for "resticted special" symbol-set usage for password generation
+    in pronounceable mode (R mode).
+    New style of hyphenated password output for pronounceable
+    password generation mode.
+
+apg-2.0.0a3
+    Better error handling in apgbfm.
+    Added -q option for apgbfm and apg (quiet mode).
+    Added PHP frontend for APG.
+
+apg-2.0.0a2
+    Added support for SHA1 algorithm used for random numbers and hash
+    generation.
+    Hash function used in apgbfm changed to SHA1.
+    Added info to APG_TIPS file.
+
+apg-2.0.0a1 (not published)
+    Finaly fixed some warnings during compilation process.
+    Added support for OpenBSD.
+    Added info to APG_TIPS file.
+
+apg-2.0.0a0
+    Added new algorithm (-b option) to check generated passwords
+    quality (Bloom filter).
+    Added utility apgbfm to manage Bloom filter.
+    Some code style fixes.
+    Added APG_TIPS file in documentation.
+
 apg-1.2.13
     Added support for NetBSD.
     (Thanks to Tomasz Luchowski <zuntum@eik.pl>).
@@ -63,7 +131,7 @@ apg-1.0.4
     Added option -c (see apg(1)).Changed apg.c, apg.1 manpage.
 
 apg-1.0.3
-    Fixed somecode style errors. Changed INSTALL, apgd.8 manpage.
+    Fixed some code style errors. Changed INSTALL, apgd.8 manpage.
 
 apg-1.0.2
     Improved event logging of apgd. Changed INSTALL.

@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,12 @@
 #ifndef RESTRICT_H
 #define RESTRICT_H	1
 
+#include "bloom.h"
+#include "randpass.h"
 #define MAX_DICT_STRING_SIZE	255
-extern int check_pass(char * pass, char *dict);
-extern int make_db_dict(char *dict, char *bddict);
-extern int construct_db_name(char *plain_filename, char * dbname);
+int check_pass(char * pass, char *dict);
+int bloom_check_pass (char *word, char *filter);
+int filter_check_pass(const char * word, unsigned int cond);
+int set_exclude_list(const char * char_string);
 
 #endif /* RESTRICT_H */

@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -37,13 +37,26 @@
 #include "rnd.h"
 #endif
 
+#ifndef OWNTYPES_H
+#include "owntypes.h"
+#endif
+
 #define S_NB	0x01 /* Numeric */
 #define S_SS	0x02 /* Special */
 #define S_CL	0x04 /* Capital */
 #define S_SL	0x08 /* Small   */
-#define S_RS    0x10 /* Restricted Special*/
+#define S_RS    0x10 /* Restricted Symbol*/
+
+struct sym
+ {
+  char   ch;
+  USHORT type;
+ };
 
 /* char gen_symbol(unsigned short int symbol_class); */
 extern int gen_rand_pass(char* password_string, int minl,
                          int maxl, unsigned int pass_mode);
+extern int gen_rand_symbol (char *symbol, unsigned int mode);
+extern int is_restricted_symbol (char symbol);
+
 #endif /* RANDPASS_H */

@@ -5,7 +5,7 @@
 */
 
 /*
-** Copyright (c) 1999, 2000, 2001
+** Copyright (c) 1999, 2000, 2001, 2002
 ** Adel I. Mirzazhanov. All rights reserved
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -82,5 +82,8 @@ char   	*gen_syllable(char *syllable, USHORT pwlen, USHORT *units_in_syllable,
                       USHORT *syllable_length);
 void capitalize (char *syllable);
 void numerize (char *syllable);
+void specialize (char *syllable);
+void r_specialize (char *syllable);
+void symb2name (char *syllable, char * h_syllable);
 
 #endif /* PRONPASS_H */
