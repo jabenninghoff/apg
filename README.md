@@ -6,4 +6,4 @@ Years ago, I started using Adel I. Mirzazhanov's apg (Automated Password Generat
 
 This project is a fork of the original apg, recovered from the homepage [http://www.adel.nursat.kz/apg](https://web.archive.org/web/20130313042424/http://www.adel.nursat.kz:80/apg) using the Internet Archive [Wayback Machine](https://web.archive.org). Releases were imported from the original tarballs back-dated to the reported release dates with help from [leewc](https://leewc.com/articles/making-past-git-commits/) and [alexpeattie](https://alexpeattie.com/blog/working-with-dates-in-git). It does not currently include the v2.3.0b (beta) release.
 
-A homebrew formula for installing the latest version (currently 2.2.3) is available in jabenninghoff/homebrew-edge.
+A homebrew formula for installing the latest version (currently 2.2.3) is available in [jabenninghoff/homebrew-edge](https://github.com/jabenninghoff/homebrew-edge).
