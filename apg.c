@@ -571,7 +571,7 @@ get_user_seq (void)
  char * seq;
  UINT32 prom[2] = { 0L, 0L };
  UINT32 sdres = 0L;
- printf ("\nPlease enter some random data (only first %d are significant)\n", sizeof(prom));
+ printf ("\nPlease enter some random data (only first %lu are significant)\n", sizeof(prom));
  seq = (char *)getpass("(eg. your old password):>");
  if (strlen(seq) < sizeof(prom))
   (void)memcpy((void *)&prom[0], (void *)seq, (int)strlen(seq));
